@@ -13,7 +13,7 @@ I'm happy the app update is ready for you to download.  It's free for everyone w
 
 For the rest of you:  **[Get Calendar Paste 2 on the App Store!](https://itunes.apple.com/us/app/calendar-paste-2/id581693524?mt=8&uo=4&at=11lxCd)**
 
-<a href="https://itunes.apple.com/us/app/calendar-paste-2/id581693524?mt=8&uo=4&at=11lxCd"><img src="/img/appstore.png" alt="download on the app store" /></a>
+<a href="https://itunes.apple.com/us/app/calendar-paste-2/id581693524?mt=8&uo=4&at=11lxCd"><img src="/assets/appstore.png" alt="download on the app store" /></a>
 
 It took some time to get there.  I was pretty fast at updating the look and feel of the template items.  I think the new and lighter look is relaxing, taking away some tension I didn't notice before.
 
