@@ -1,0 +1,11 @@
+/** Media query breakpoints */
+
+$breakpoint: 700px;
+
+@mixin below_breakpoint() {
+    @media (max-width: $breakpoint - 1) { @content; }
+}
+
+@mixin above_breakpoint() {
+    @media (min-width: $breakpoint) { @content; }
+}
