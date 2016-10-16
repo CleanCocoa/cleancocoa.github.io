@@ -17,4 +17,11 @@ markdown: kramdown
 
 lang: en
 timezone: Germany/Berlin
-permalink: /posts/:year/:month/:day/:title/
+
+collections:
+  posts: 
+    output: true
+    permalink: /posts/:year/:month/:day/:title/
+  wiki:
+    output: true
+    permalink: /wiki/:title/
