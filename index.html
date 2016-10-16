@@ -4,14 +4,17 @@ layout: default
 
 <div class="home">
 
-  <h1 class="page-heading">Posts</h1>
+  <h1 class="page-heading">Latest Posts</h1>
 
-  <ul class="post-list">
-    {% for post in site.posts limit: 10%}
-      {% include post.html post=post %}
-    {% endfor %}
-  </ul>
+  <section class="post-list">
+{% for post in site.posts limit: 10%}
+  {% include post.html post=post %}
+{% endfor %}
+  </section>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+  
+  <p><a href="/archive/">Browse the archive</a></p>
+  
+  <p class="rss-subscribe">Subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 
 </div>
