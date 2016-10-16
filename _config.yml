@@ -18,10 +18,24 @@ markdown: kramdown
 lang: en
 timezone: Germany/Berlin
 
+# Posts
+permalink: /posts/:year/:month/:title/
+
 collections:
-  posts: 
-    output: true
-    permalink: /posts/:year/:month/:day/:title/
   wiki:
     output: true
     permalink: /wiki/:title/
+
+
+defaults: 
+  - scope:
+      path: ""
+      type: posts
+    values: 
+      layout: post
+      author: ct
+  - scope:
+      path: ""
+      type: wiki
+    values: 
+      layout: page
