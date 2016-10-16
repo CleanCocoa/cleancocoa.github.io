@@ -11,5 +11,17 @@ layout: default
   <div class="post-content" itemprop="articleBody">
     {{ content }}
   </div>
+  
+  <footer>
+    <ul class="post__metadata">
+      <li>Tagged as:
+        <ul class="post__tags">
+          {% for tag in page.tags %}
+          <li class="tag"><a href="/posts/tags/#{{ tag | url_escape }}">{{ tag }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </footer>
 
 </article>
