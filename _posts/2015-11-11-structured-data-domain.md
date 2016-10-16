@@ -17,7 +17,7 @@ Events have a limited number of seats. Users can book seats at events. Once the 
 
 We don't have performance problems, so I didn't see why we should mutate an existing event in the database when a booking takes place to decrease the number of `seatsLeft`. Also, I figured that concurrent access could cause problems -- problems which the DBMS will probably take care of in transactions.
 
-{% include figure.md src="/assets/blog/blog/201511111020_clay.jpg" alt="clay" url="https://www.flickr.com/photos/suckamc/161380717/in/photostream/" caption="Photo credit: <a href=\"https://www.flickr.com/photos/suckamc/161380717/in/photostream/\">Blob o' clay</a> by Martin Cathrae. License: <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a>" %}
+{% include figure.md src="/assets/blog/201511111020_clay.jpg" alt="clay" url="https://www.flickr.com/photos/suckamc/161380717/in/photostream/" caption="Photo credit: <a href=\"https://www.flickr.com/photos/suckamc/161380717/in/photostream/\">Blob o' clay</a> by Martin Cathrae. License: <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a>" %}
 
 I'm a developer, and I'm an [object thinker](/posts/2015/10/domain-driven-design-meaning/), it seems. Capturing the problem domain by the means of a database schema (solution space/implementation concern) is a bad idea because lots of information get lost.
 

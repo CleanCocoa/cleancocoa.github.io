@@ -15,7 +15,7 @@ After all, using it in tests directly will hit the servers; that's not what you 
 
 ## Inject a Protocol You _Do_ Own
 
-{% include figure.md src="/assets/blog/blog/201506031611_strawman.jpg" alt="strawman" caption="Photo Credit: <a href=\"https://www.flickr.com/photos/earl258/2448032465/\">稻田 ricefilm Strawman</a> by <a href=\"https://www.flickr.com/photos/earl258/\">earl258</a>. License: <a href=\"https://creativecommons.org/licenses/by-nc/2.0/\">CC-BY-NC 2.0</a>" %}
+{% include figure.md src="/assets/blog/201506031611_strawman.jpg" alt="strawman" caption="Photo Credit: <a href=\"https://www.flickr.com/photos/earl258/2448032465/\">稻田 ricefilm Strawman</a> by <a href=\"https://www.flickr.com/photos/earl258/\">earl258</a>. License: <a href=\"https://creativecommons.org/licenses/by-nc/2.0/\">CC-BY-NC 2.0</a>" %}
 
 The rationale is simple: you should not provide test doubles for things you don't own. So in [the first part][post] of the series, Joe points out what you need to do instead:
 

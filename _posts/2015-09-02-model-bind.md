@@ -61,7 +61,7 @@ I found I cheated when I made `depositCash` require a `fromAccount` parameter ju
 
 ## Using no Builder but Expressive Objects
 
-{% include figure.md src="/assets/blog/blog/201509021531_clean-up.jpg" alt="Please Clean Up Your Mess sign" caption="Photo Credit: <a href=\"https://www.flickr.com/photos/allen_goldblatt/194069411/\">Please Clean Up Your Mess</a> by Allen Goldblatt. License: <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC-BY 2.0</a>" %}
+{% include figure.md src="/assets/blog/201509021531_clean-up.jpg" alt="Please Clean Up Your Mess sign" caption="Photo Credit: <a href=\"https://www.flickr.com/photos/allen_goldblatt/194069411/\">Please Clean Up Your Mess</a> by Allen Goldblatt. License: <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC-BY 2.0</a>" %}
 
 So while the Builder and the value type initializer now better capture my real intent, I see that I miss cash withdrawal and depositing. The behavior is missing.
 

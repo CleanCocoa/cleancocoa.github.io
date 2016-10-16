@@ -31,7 +31,7 @@ You can declare subclasses in the scope of the test method and override only the
 
 I like to take the additional safety measure to exclusively descend from [Null-Objects][nop] in such cases. If `foo()` called another method on its `Bar` parameter than expected, we end up with the real behavior and real side-effects. The Null-Object pattern ensures the parent class does nothing for every method, not just the one we override in a specific test.
 
-{% include figure.md src="/assets/blog/blog/201506031611_strawman.jpg" alt="strawman" caption="Photo Credit: <a href=\"https://www.flickr.com/photos/earl258/2448032465/\">稻田 ricefilm Strawman</a> by <a href=\"https://www.flickr.com/photos/earl258/\">earl258</a>. License: <a href=\"https://creativecommons.org/licenses/by-nc/2.0/\">CC-BY-NC 2.0</a>" %}
+{% include figure.md src="/assets/blog/201506031611_strawman.jpg" alt="strawman" caption="Photo Credit: <a href=\"https://www.flickr.com/photos/earl258/2448032465/\">稻田 ricefilm Strawman</a> by <a href=\"https://www.flickr.com/photos/earl258/\">earl258</a>. License: <a href=\"https://creativecommons.org/licenses/by-nc/2.0/\">CC-BY-NC 2.0</a>" %}
 
 Using subclasses private to a method is clever, but it doesn't cut it. You can write stubs easily, but you cannot write [mock objects](http://martinfowler.com/articles/mocksArentStubs.html#TestsWithMockObjects) which record incoming calls for verification without a lot of hassle.
 

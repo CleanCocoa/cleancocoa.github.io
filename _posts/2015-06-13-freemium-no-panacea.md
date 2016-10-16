@@ -22,7 +22,7 @@ Even with app analytics, how can you find out usage patterns if people know they
 
 You can only compare to data from the less limited intro phase. Do users stop opening the app regularly after they converted their first 3 articles?
 
-{% include figure.md src="/assets/blog/blog/201506131611_grow-money.jpg" alt="growing money" caption="Photo credit: <a href=\"https://www.flickr.com/photos/59937401@N07/5857496167/\">Euro Money in Pots</a> by <a href=\"http://www.taxrebate.org.uk\">Images Money</a>. License: <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC-BY 2.0</a>" %}
+{% include figure.md src="/assets/blog/201506131611_grow-money.jpg" alt="growing money" caption="Photo credit: <a href=\"https://www.flickr.com/photos/59937401@N07/5857496167/\">Euro Money in Pots</a> by <a href=\"http://www.taxrebate.org.uk\">Images Money</a>. License: <a href=\"https://creativecommons.org/licenses/by/2.0/\">CC-BY 2.0</a>" %}
 
 Read [Stuart Hall's experiments](http://stuartkhall.com/posts/an-app-store-experiment-part-3) with the vastly more successful 7-Minutes workout app. He switched to In-App Purchases and people loved it. He found folks liked buying features less than buying additional content. I try to keep that in mind because it makes sense, but then again, I'm probably [biased towards the good story.](http://wiki.lesswrong.com/wiki/Good-story_bias)
 

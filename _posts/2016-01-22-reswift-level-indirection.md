@@ -31,7 +31,7 @@ Here's my version of the `AppState` that includes Benjamin's recommendations pre
 
 The most basic type of app state that includes routing to view controllers is the combined `protocol<StateType, HasNavigationState>`. That's a combination of what the router on one side and the main state store and its reducers expect. 
 
-{% include figure.md src="/assets/blog/blog/201601212226_reswift_concept.png" alt="data flow" caption="Flow of actions to change state and propagate the change back to the app." %}
+{% include figure.md src="/assets/blog/201601212226_reswift_concept.png" alt="data flow" caption="Flow of actions to change state and propagate the change back to the app." %}
 
 I've written a few words about [reducers and actions](/posts/2016/01/event-declarative-state/) yesterday already. It's a really cool concept on its own already.
 
