@@ -5,8 +5,9 @@ layout: page
 ---
 
 <ul class="authors">
-{% for author in site.data.authors | sort %}
-  <li class="authors__author">
+{% for author_hash in site.data.authors | sort %}
+  {% assign author = author_hash[1] %}
+  <li class="authors__author" id="{{ author.name | url_escape }}">
     {% if author.website %}<a href="{{ author.website }}">{{ author.name }}</a>{% else %}{{ author.name }}{% endif %}: 
     {% if author.twitter %}<a href="http://twitter.com/{{ author.twitter }}">@{{ author.twitter }}</a>{% endif %}
     {% if author.github %}<a href="http://github.com/{{ author.github }}">Github</a>{% endif %}
