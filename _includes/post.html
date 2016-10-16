@@ -1,0 +1,35 @@
+{% assign page = include.post %}
+{% assign content = page.content %}
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post__header">
+    <h1 class="post__title" itemprop="name headline">
+      <a class="post-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+    </h1>
+    <p class="post__meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
+      {% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        {% assign author = site.data.authors[page.author] %}
+        <a href="/authors/#{{ author.name | url_ecape }}" rel="author"><span itemprop="name">{{ author.name }}</span></a>
+      </span>
+      {% endif %}
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    {{ content }}
+  </div>
+  
+  <footer>
+    <ul class="post__metadata">
+      <li>Tagged as:
+        <ul class="post__tags">
+          {% for tag in page.tags %}
+          <li class="tag"><a href="/posts/tags/#{{ tag | url_escape }}">{{ tag }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </footer>
+
+</article>
