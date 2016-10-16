@@ -14,11 +14,13 @@
       </a>
 
       <div class="trigger">
-        {% for my_page in site.pages %}
-          {% if my_page.title %}
-          <a class="page-link" href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a>
-          {% endif %}
-        {% endfor %}
+        <ul class="mainmenu">
+          {% for item in site.data.menu-items %}
+          <li class="mainmenu__item">
+            <a class="mainmenu__link" href="{{ item.url | prepend: site.baseurl }}">{{ item.title }}</a>
+          </li>
+          {% endfor %}
+        </ul>
       </div>
     </nav>
 
