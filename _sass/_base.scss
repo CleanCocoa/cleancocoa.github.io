@@ -97,17 +97,20 @@ h4, h5, h6 { font-size: 118%; }
  * Links
  */
 a {
-    color: $brand-color;
-    text-decoration: none;
+  color: $link-color;
+  text-decoration: none;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: $link-color;
 
-    &:visited {
-        color: darken($brand-color, 15%);
-    }
+  &:visited {
+    $color: darken($brand-color, 15%);;
+    color: $color;
+  }
 
-    &:hover {
-        color: $text-color;
-        text-decoration: underline;
-    }
+  &:hover {
+    border-bottom-color: transparent;
+  }
 }
 
 

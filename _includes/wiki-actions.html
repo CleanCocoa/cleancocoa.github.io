@@ -1,0 +1,12 @@
+<nav>
+{% if include.position == "header" %}
+  <ul class="wiki-actions wiki-actions--header">
+{% elsif include.position == "footer" %}
+  <ul class="wiki-actions wiki-actions--footer">
+{% else %}
+  <ul class="wiki-actions">
+{% endif %}
+    <li class="wiki-action"><a class="wiki-action__link" href="http://github.com/CleanCocoa/cleancocoa.github.io/raw/master/{{page.path}}">View Source</a></li>
+    <li class="wiki-action"><a class="wiki-action__link" href="http://github.com/CleanCocoa/cleancocoa.github.io/edit/master/{{page.path}}">Edit</a></li>
+  </ul>
+</nav>

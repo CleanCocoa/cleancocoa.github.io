@@ -232,3 +232,29 @@ $footer-spacing: 30px;
   vertical-align: top; 
   text-align: center; 
 }
+
+/** Wiki */
+
+.wiki-actions { 
+  list-style-type: none; 
+  margin-left: 0;  
+
+  @include above_breakpoint() {
+    float: right;
+  }
+}
+.wiki-actions--header {
+  @include above_breakpoint() {
+    margin-top: -2.5em;
+  }
+}
+.wiki-action { 
+  display: inline-block;
+  font-size: $small-font-size; 
+  padding-left: 1.5em;
+}
+.wiki-action__link { 
+  border: 1px solid $link-color; 
+  padding: 0.2em 0.5em;
+  &:hover { border-bottom-color: inherit; }
+}
