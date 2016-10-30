@@ -128,14 +128,13 @@ $footer-spacing: 30px;
 .footer-col-wrapper {
     font-size: 15px;
     color: $grey-color;
-    margin-left: $footer-spacing / 2;
     @extend %clearfix;
 }
 
 .footer-col {
     float: left;
     margin-bottom: $footer-spacing / 2;
-    padding-left: $footer-spacing / 2;
+    padding-right: $footer-spacing / 2;
 }
 
 .footer-col-1 {
