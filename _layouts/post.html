@@ -5,14 +5,18 @@ layout: default
 
   <header class="post__header">
     <h2 class="post__title" itemprop="name headline">{{ page.title }}</h2>
-    <p class="post__meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
-      {% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-        {% assign author = site.data.authors[page.author] %}
-        <a href="/authors/#{{ author.name | url_ecape }}" rel="author"><span itemprop="name">{{ author.name }}</span></a>
-      </span>
+    <ul class="post__meta">
+      <li class="post__meta-item"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time></li>
+      
+      {% if page.author %}
+      <li class="post__meta-item">
+        <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          {% assign author = site.data.authors[page.author] %}
+          <a href="/authors/#{{ author.name | url_ecape }}" rel="author"><span itemprop="name">{{ author.name }}</span></a>
+        </span>
+      </li>
       {% endif %}
-    </p>
+    </ul>
   </header>
 
   <div class="post-content" itemprop="articleBody">
@@ -20,15 +24,17 @@ layout: default
   </div>
   
   <footer>
-    <ul class="post__metadata">
-      <li>Tagged as:
+    {% if page.tags %}
+    <ul class="post__meta">
+      <li class="post__meta-item">Tags:
         <ul class="post__tags">
           {% for tag in page.tags %}
-          <li class="tag"><a href="/posts/tags/#{{ tag | url_escape }}">{{ tag }}</a></li>
+          <li class="post__tag"><a class="post__tag-link" href="/posts/tags/#{{ tag | url_escape }}">{{ tag }}</a></li>
           {% endfor %}
         </ul>
       </li>
     </ul>
+    {% endif %}
   </footer>
 
 </article>

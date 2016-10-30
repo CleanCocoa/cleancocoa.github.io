@@ -193,10 +193,26 @@ $footer-spacing: 30px;
 
 .post--index { margin-bottom: 6em; }
 
-.post-meta {
-    font-size: $small-font-size;
-    color: $grey-color;
+.post__meta {
+  font-size: $small-font-size;
+  color: $grey-color;
+  
+  display: block;
+  list-style-type: none; 
+  margin-left: 0;
+  margin-right: 0;
 }
+.post__meta .post__meta-item { display: inline; }
+.post__meta .post__meta-item:not(:last-child):after { content: " •"; }
+
+.post__tags { 
+  display: inline;
+  list-style-type: none; 
+  margin: 0;
+}
+.post__tag { display: inline; }
+.post__tag:not(:last-child):after { content: ","; }
+.post__tag-link {}
 
 .post-link {
   display: block;
