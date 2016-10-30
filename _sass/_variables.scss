@@ -9,3 +9,24 @@ $breakpoint: 700px;
 @mixin above_breakpoint() {
     @media (min-width: $breakpoint) { @content; }
 }
+
+@mixin contrast_button($fg, $contrast) {
+  $color: $fg;
+  border-color: $color;
+  color: $color;
+  &:hover {
+    color: $contrast;
+    background-color: $color;
+    border-color: $color;
+  }
+}
+
+@mixin transition($properties: all, $duration: .3s, $easing: ease-out) {
+  @if length($properties) > 1 {
+    transition-property: $properties;
+    transition-duration: $duration;
+    transition-timing-function: $easing;
+  } @else {
+    transition: $properties $duration $easing;
+  }
+}

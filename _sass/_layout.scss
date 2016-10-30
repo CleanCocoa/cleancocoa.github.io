@@ -259,7 +259,10 @@ $footer-spacing: 30px;
   }
 }
 .wiki-actions--header {
+  display: none;
+  
   @include above_breakpoint() {
+    display: block;
     margin-top: -2.5em;
   }
 }
@@ -270,6 +273,9 @@ $footer-spacing: 30px;
 }
 .wiki-action__link { 
   border: 1px solid $link-color; 
-  padding: 0.2em 0.5em;
+  padding: 0.5em 0.7em;
   &:hover { border-bottom-color: inherit; }
+
+  @include transition((background-color, color, border-color), 0.15s, ease-out);
+  @include contrast_button($link-color, #fff);
 }
