@@ -207,3 +207,6 @@ pre {
         }
     }
 }
+
+// VG WORT images are counter pixels and need not be visible
+img.vgwort { border: 0; padding: 0; position: absolute; top: -9999px; left: -9999px; }
