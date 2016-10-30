@@ -4,7 +4,7 @@
 
   <header class="post__header">
     <h1 class="post__title" itemprop="name headline">
-      <a class="post-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+      <a class="post-link post-link--title" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
     </h1>
     <p class="post__meta">
       <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>

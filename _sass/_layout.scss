@@ -199,7 +199,11 @@ $footer-spacing: 30px;
 }
 
 .post-link {
-    display: block;
+  display: block;
+}
+.post-link--title {
+  text-decoration: none;
+  border-bottom-color: transparent;
 }
 
 .post-content {
