@@ -298,3 +298,22 @@ $footer-spacing: 30px;
   @include transition((background-color, color, border-color), 0.15s, ease-out);
   @include contrast_button($link-color, #fff);
 }
+
+
+/** Tags page */
+.alltags { 
+  list-style-type: none; 
+  margin-left: 0;
+  margin-right: 0;
+}
+.alltags__tag { 
+  display: inline-block;
+  width: 45%;
+  
+  @include above_breakpoint() {
+    width: 30%;
+  }
+}
+
+.tagged-posts {}
+.tagged-post {}
