@@ -4,15 +4,16 @@
 @charset "utf-8";
 
 
-
 // Our variables
-$base-font-family: "Open Sans", Arial, sans-serif;
+$font-sans:        "Open Sans", Arial, sans-serif;
+$font-heading:     "Vollkorn", serif;
+$font-code:        "Fira Mono", monospace;
+
+$base-font-family: $font-sans;
 $base-font-size:   20px;
 $base-font-weight: 400;
 $small-font-size:  $base-font-size * 0.875;
-$base-line-height: 1.6;
-$heading-font-family: "Vollkorn", serif;
-$code-font-family: "Fira Mono", monospace;
+$base-line-height: 1.7;
 
 $text-color:       #111;
 $background-color: #fdfdfd;
@@ -25,8 +26,10 @@ $grey-color-dark:  darken($grey-color, 25%);
 
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
-        "variables",
-        "base",
-        "layout",
-        "syntax-highlighting"
+  "solarized",
+  "breakpoints",
+  "base",
+  "layout",
+  "syntax-highlighting",
+  "books"
 ;

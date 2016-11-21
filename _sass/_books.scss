@@ -1,0 +1,210 @@
+/** Individual book page */
+
+.hero { 
+  overflow: hidden;
+}
+
+.hero__cover {
+  text-align: center;
+  
+  @include above_breakpoint() {
+    width: 40%;
+    float: left;
+    margin-right: 2em;
+  }
+}
+
+.hero__image {
+  border: 1px solid black;
+  max-width: 60%;
+  
+  @include above_breakpoint() {
+    max-width: 100%;
+  }
+}
+
+.hero__heading {
+  clear: none;
+  margin-top: 0;
+  font-weight: normal;
+}
+
+.hero__text {
+  font-family: $font-sans;
+  font-weight: 200;
+}
+
+.hero__rule {
+  border-top: 4px solid $color-s-violet;
+  margin-bottom: 2em;
+  margin-top: 2em;
+}
+
+.smallprint {
+  clear: both;
+  font-size: $small-font-size;
+  font-family: $font-sans;
+  font-weight: 200;
+  
+  strong, b {
+    font-weight: 400;
+  }
+  
+  ul { 
+    margin-left: 2em; 
+  }
+}
+
+.tagline {
+  font-size: 1.4em;
+  @include above_breakpoint() {
+    font-size: 1.8em;
+  }
+  font-weight: 200;
+  color: $color-s-base01;
+  text-align: center;
+  line-height: 1.2em;
+  
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+
+/** Actions */
+
+.actions {
+  text-align: center;
+  font-family: $font-sans;
+  clear: both;
+  vertical-align: top;
+  padding-top: 2em;
+  
+  @include above_breakpoint() {
+    padding-top: 1em;
+    margin-bottom: 3em;
+  }
+}
+
+.actions.actions--small {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.actions__misc {
+  @include above_breakpoint() {
+    display: inline-block;
+  }
+}
+
+.actions__buying, 
+.actions__misc {
+  padding: 0;
+  vertical-align: top;
+  @include above_breakpoint() {  
+    margin-top: 1em;
+  }
+}
+
+.actions__buying__item {
+  list-style-type: none;
+}
+
+.action {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 1em;
+  padding: 1em 2em;
+  display: block;
+  
+  @include above_breakpoint() {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0em;
+  }
+  
+  text-decoration: none;
+  text-align: center;
+  vertical-align: middle;
+  
+  border-radius: 0.4em;
+}
+
+.actions__buying {
+  .cta {
+    font-weight: bold;
+  }
+  
+  .action {
+    @include above_breakpoint() {
+      margin-left: 10%;
+      margin-right: 10%;
+    }
+  }
+}
+
+.action--buy--main {
+  font-size: 1.2em;
+}
+
+.action.action--small {
+  margin-top: 1em;
+  padding: 0.5em 1em;
+  
+  @include above_breakpoint() {
+    display: inline-block;
+    margin-top: 1em;
+    margin-left: 0%;
+    margin-right: 0%;
+  }
+}
+
+.action--download:link, .action--download:visited {
+  $color: #4ecb19;
+  border-width: 2px;
+  border-style: solid;
+  border-color: $color;
+  color: $color;
+  
+  @include above_breakpoint() {
+    margin-left: 1em;
+  }
+}
+.action--download:hover {
+  $color: darken(#4ecb19, 10%);
+  border-color: $color;
+  color: $color
+}
+
+.action.action--aux {
+  display: inline-block;
+  padding: 0;
+  margin-top: 0.5em;
+  border-radius: 0;
+  line-height: 1.4em;
+}
+
+.action--contact:link, .action--contact:visited {
+  color: white;
+  background: #5B6FDC;
+}
+.action--contact:hover {
+  color: white;
+  background: darken(#5B6FDC, 5%);
+}
+
+.action--buy:link, .action--buy:visited {
+  color: white;
+  background: #0000ff;//#5B6FDC;
+}
+.action--buy:hover {
+  color: white;
+  background: darken(#0000FF, 5%);
+}
+
+.action--details:link, .action--details:visited {
+  background: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+}
