@@ -14,7 +14,7 @@ github_username:  cleancocoa
 
 # Build settings
 markdown: kramdown
-
+exclude: ['Rakefile', 'Gemfile.lock', 'Gemfile']
 lang: en
 timezone: Germany/Berlin
 
