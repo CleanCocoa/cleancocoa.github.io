@@ -197,15 +197,15 @@ pre {
  * Wrapper
  */
 .wrapper {
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 5%;
-    padding-left: 5%;
-    @extend %clearfix;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 5%;
+  padding-left: 5%;
+  @extend %clearfix;
 
-    @include above_breakpoint() {
-        max-width: 36em;
-    }
+  @include above_breakpoint() {
+    max-width: 34em;
+  }
 }
 
 
