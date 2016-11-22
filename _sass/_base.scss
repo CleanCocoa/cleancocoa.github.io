@@ -144,7 +144,9 @@ a {
     border-bottom-color: transparent;
   }
 }
-
+a.figure-link, a.figure-link:visited, a.figure-link:hover {
+  border-bottom-color: transparent;
+}
 
 
 /**

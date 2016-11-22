@@ -9,12 +9,15 @@ E-mail me at: <a href="mailto:&#x68;&#x69;&#x40;&#x63;&#x68;&#x72;&#x69;&#x73;&#
 Legal Notice
 ------------
 
-<p>Responsible for the contents of the fork of this website hosted at `cleancocoa.com`:</p>
+Responsible for the contents of the fork of this website hosted at `cleancocoa.com`:
 
 <p class="vcard">
   <span class="fn"><a href="mailto:christian.tietze@gmail.com" class="email">Christian Tietze</a></span><br/>
-  <span class="adr home"><span class="street-address">Elpke 39</span><br/>
-  <span class="postal-code">D-33605</span> <span class="locality">Bielefeld</span></span><br/>
+  <span class="adr home">
+      <span class="street-address">Elpke 39</span><br/>
+      <span class="postal-code">D-33605</span> <span class="locality">Bielefeld</span><br/>
+      <span class="country-name">Germany</span><br/>
+  </span>
   <br />
   +49 177 6467763
 </p>
