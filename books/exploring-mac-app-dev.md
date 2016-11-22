@@ -1,6 +1,5 @@
 ---
 title: Exploring Mac App Development Strategies, 4th Edition
-layout: page
 ---
 
 {% include fastspring.html %}
@@ -35,7 +34,9 @@ layout: page
     <div class="smallprint">
         <ul>
             <li>Lifetime access to updates</li>
-            <li>100% Money Back Guarantee: Because I know you’ll love it!</li>
+            <li>4th, expanded edition</li>
+            <li>Swift 3 ready</li>
+            <li>100% Money Back Guarantee: Because I know you’ll love the book!</li>
         </ul>
     </div>
 
@@ -55,7 +56,7 @@ All this will make your application easier to change and easier to maintain. It 
 
 To develop Mac applications, you'll need to know why and how to separate components. Using the latest technology and a head-start into Swift programming, this book will show you the pro's and con's of several design decisions and discuss alternative approaches so you get to know your options.
 
-## Core Ideas of the Book
+## Core Ideas of “Exploring Mac App Development Strategies, 4th ed.”
 
 We'll explore useful patterns to make the code manageable. Here are some of the topics I explore, discuss, and challenge in this book:
 
@@ -103,7 +104,11 @@ Feel free to contribute to the book and the project on GitHub:
 [1]: https://github.com/CleanCocoa/mac-appdev-book
 [2]: https://github.com/CleanCocoa/mac-appdev-code
 
+## Technical Details
 
+* Current version: 4.0.0 (2016-11-21)
+* Written in the latest Swift 3
+* Comes as PDF, EPUB, and MOBI
 
 <div class="actions">
     <ul class="actions__buying">
@@ -120,7 +125,6 @@ Feel free to contribute to the book and the project on GitHub:
         <a class="action action--download" href="http://cleancocoa.s3.amazonaws.com/develop-mac-apps-clean-architecture-swift-sample.pdf">Free Sample</a>
     </div>
 </div>
-
 
 ## FAQ
 
