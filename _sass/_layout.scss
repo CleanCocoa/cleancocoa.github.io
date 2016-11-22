@@ -4,7 +4,7 @@
 .site-header {
   font-family: $font-sans;
   
-  border-bottom: 1px solid $grey-color-light;
+  border-bottom: 0.3em solid $color-s-green;
   min-height: 56px;
 
   // Positioning context for the mobile navigation icon
@@ -12,7 +12,11 @@
 }
 
 .site-title {
-  font-size: 2em;
+  font-size: 1.8em;
+  @include above_breakpoint() {
+    font-size: 2.4em;
+  }
+  
   font-weight: 300;
   line-height: 2em;
   margin-bottom: 0;
@@ -111,12 +115,13 @@
  * Site footer
  */
 .site-footer {
-    border-top: 1px solid $grey-color-light;
-    padding: 1em 0;
+  border-top: 0.3em solid $color-s-green;
+  padding: 1em 0;
+  font-family: $font-sans;
 }
 
 .footer-heading {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .contact-list,
@@ -176,11 +181,10 @@ $footer-spacing: 30px;
 
 
 
-/**
- * Page content
- */
+/** Page content */
+
 .page-content {
-    padding: 1em 0;
+  padding: 4em 0 2em 0;
 }
 
 
@@ -271,6 +275,7 @@ $footer-spacing: 30px;
 /** Wiki */
 
 .wiki-actions { 
+  font-family: $font-sans;
   list-style-type: none; 
   margin-left: 0;  
 
