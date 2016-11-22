@@ -5,7 +5,7 @@
   font-family: $font-sans;
   
   border-bottom: 0.3em solid $color-s-green;
-  min-height: 56px;
+  min-height: 72px;
 
   // Positioning context for the mobile navigation icon
   position: relative;
@@ -192,7 +192,7 @@ $footer-spacing: 30px;
  * Posts
  */
 .post-header {
-
+  
 }
 
 .post__title {}
@@ -266,12 +266,12 @@ $footer-spacing: 30px;
   
   @include above_breakpoint() {
     display: block;
-    margin-top: -2.5em;
+    margin-top: -5em;
   }
 }
 .wiki-action { 
   display: inline-block;
-  font-size: $small-font-size; 
+  font-size: $super-small-font-size; 
   padding-left: 1.5em;
 }
 .wiki-action__link { 
