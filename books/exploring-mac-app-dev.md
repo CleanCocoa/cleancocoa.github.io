@@ -3,13 +3,7 @@ title: Exploring Mac App Development Strategies, 4th Edition
 layout: page
 ---
 
-<script
-    id="fsc-api"
-    src="https://d1f8f9xcsvx3ha.cloudfront.net/sbl/0.7.1/fastspring-builder.min.js"
-    type="text/javascript"
-    data-storefront="cleancocoa.test.onfastspring.com/popup-cleancocoa"
-    data-debug="true">
-</script>
+{% include fastspring.html %}
 
 <div class="hero">
     <div class="hero__cover">
