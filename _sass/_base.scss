@@ -138,24 +138,21 @@ pre, code {
   font-family: $font-code;
 }
 
+code { font-size: $small-font-size; }
+
 pre {
-  font-size: $small-font-size;
-  border: 1px solid $grey-color-light;
-  border-radius: 3px;
   background-color: #eef;
-}
+  
+  padding: 0.5em 1em;
+  overflow-x: auto;
+  line-height: 1.3;
 
-code { }
-
-pre {
-    padding: 8px 12px;
-    overflow-x: auto;
-
-    > code {
-        border: 0;
-        padding-right: 0;
-        padding-left: 0;
-    }
+  > code {
+    font-size: 80%;
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
 
 
