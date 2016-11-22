@@ -34,7 +34,7 @@ h1, h2, h3, h4, h5, h6 {}
 p, blockquote, pre,
 ul, ol, dl, figure,
 %vertical-rhythm {
-  margin-bottom: 1em;
+  margin-bottom: 1.8em;
 }
 
 
@@ -66,7 +66,10 @@ figcaption {
  * Lists
  */
 ul, ol {
-    margin-left: 1em;
+  margin-left: 1.8em;
+  @include above_breakpoint() {
+    margin-left: 0em;
+  }
 }
 
 li {
@@ -82,12 +85,12 @@ li {
  * Headings
  */
 h1, h2, h3, h4, h5, h6 {
-    font-family: $font-heading;
-    font-weight: $base-font-weight;
+  font-family: $font-heading;
+  font-weight: bold;
 }
 
-h1 { font-size: 218%; line-height: 1.1em; margin-bottom: 0.45em; }
-h2 { font-size: 164%; }
+h1 { font-size: 218%; line-height: 1.1em; margin-bottom: 0.45em; color: lighten($text-color, 25%); }
+h2 { font-size: 164%; line-height: 1.3em; margin-bottom: 0.3em; color: lighten($text-color, 20%); }
 h3, .page-heading { font-size: 145%; }
 h4, h5, h6 { font-size: 118%; }
 
@@ -168,7 +171,7 @@ pre {
     @extend %clearfix;
 
     @include above_breakpoint() {
-        max-width: 40em;
+        max-width: 36em;
     }
 }
 
