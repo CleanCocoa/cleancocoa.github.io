@@ -6,14 +6,15 @@
 
 // Our variables
 $font-sans:        "Open Sans", Arial, sans-serif;
-$font-heading:     "Vollkorn", serif;
+$font-serif:       "Source Serif Pro", serif;
+$font-heading:     $font-sans;
 $font-code:        "Fira Mono", monospace;
 
-$base-font-family: $font-sans;
-$base-font-size:   20px;
+$base-font-family: $font-serif;
+$base-font-size:   22px;
 $base-font-weight: 400;
 $small-font-size:  $base-font-size * 0.875;
-$base-line-height: 1.7;
+$base-line-height: 1.8;
 
 $text-color:       #111;
 $background-color: #fdfdfd;
