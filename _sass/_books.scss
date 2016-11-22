@@ -25,9 +25,13 @@
 
 .hero__heading {
   clear: none;
-  margin-top: 0;
   font-weight: normal;
   line-height: 1.3;
+  margin-top: 1.3em;
+  
+  @include above_breakpoint() {
+    margin-top: 0;
+  }
 }
 
 .hero__text {
@@ -80,7 +84,8 @@
   font-family: $font-sans;
   clear: both;
   vertical-align: top;
-  padding-top: 2em;
+  padding-top: 0;
+  margin-bottom: 2em;
   
   @include above_breakpoint() {
     padding-top: 1em;
@@ -102,6 +107,7 @@
 
 .actions__buying, 
 .actions__misc {
+  margin-left: 0;
   padding: 0;
   vertical-align: top;
   @include above_breakpoint() {  
@@ -151,7 +157,7 @@
 }
 
 .action.action--small {
-  margin-top: 1em;
+  margin-top: 0em;
   padding: 0.5em 1em;
   
   @include above_breakpoint() {
@@ -236,11 +242,22 @@
   }
 }
 
-.product__title { font-size: 118%; margin-bottom: 1em; }
+.product__title { 
+  font-size: 118%; // h3 small size
+  margin-bottom: 1em;
+  margin-top: 1.3em;
+  @include above_breakpoint() {
+    margin-top: 0;
+  }
+}
 
 .product__shot {
   border: 1px solid #555;
-
+  max-width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  
   @include above_breakpoint() {
     max-width: 30%;
     max-height: 14em;
