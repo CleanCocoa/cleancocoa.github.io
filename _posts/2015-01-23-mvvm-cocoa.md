@@ -31,21 +31,22 @@ Your client code doesn't need to know what the view does or which components it'
 
 A few weeks ago, I [linked to](/posts/2014/12/mvvm-in-swift) a post by Srdan Rasic about MVVM in Swift. Adapted to the example here, it could look like this:
 
-    #!swift
-    class PersonViewController {
-      var fullNameLabel: UILabel
-   
-      var viewModel: PersonViewViewModel {
-        didSet {
-          viewModel.fullName.bindAndFire {
-            [unowned self] in
-            self.fullNameLabel.text = $0
-          }
-        }
+```swift
+class PersonViewController {
+  var fullNameLabel: UILabel
+
+  var viewModel: PersonViewViewModel {
+    didSet {
+      viewModel.fullName.bindAndFire {
+        [unowned self] in
+        self.fullNameLabel.text = $0
       }
-      // ...
     }
-    
+  }
+  // ...
+}
+```
+
 Now when the view model's `fullName` property changes, the user interface will update. As a corollary, change the properties on this _model of the view_ to update the UI. A presenter hides away the complexity of the user interface. To the client code, the rest happens magically.
 
 Essentially, that's what Cocoa Bindings promise. Only they tend to be used on objects of the Domain Model. That's not where they belong. Read [my book about clean coding for the Mac][book] to find out what to do instead!

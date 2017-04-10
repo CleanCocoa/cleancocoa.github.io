@@ -23,86 +23,89 @@ With Swift's `if-let` pattern, the happy path of execution is usually inside the
 
 It may look like this:
 
-    #!swift
-    func workOnSomething(comingFrom aDataSource: Source) {
-        if let theThing = aDataSource.thingFromSomewhere() {
-            self.worker.work(theThing)
-            // this is the happy path; but it's finished, 
-            // so don't go on afterwards
-            return
-        }
-        
-        // Handle that aDataSource didn't produce theThing, i.e. show
-        // an error or otherwise recover from a bad state.
+```swift
+func workOnSomething(comingFrom aDataSource: Source) {
+    if let theThing = aDataSource.thingFromSomewhere() {
+        self.worker.work(theThing)
+        // this is the happy path; but it's finished, 
+        // so don't go on afterwards
+        return
     }
+    
+    // Handle that aDataSource didn't produce theThing, i.e. show
+    // an error or otherwise recover from a bad state.
+}
+```
 
 The last line of the method won't tell you what it does. You actually have to start at the beginning and follow conditions in your mind to find out where you'll end up.
 
 In Objective-C, you would've done it thus (assuming it's a method):
 
-    #!objc
-    - (void)workOnSomethingComingFrom:(Source *)aDataSource {
-        Thing *theThing = [aDataSource thingFromSomewhere];
-        
-        if (!theThing) {
-            // This is the Guard Clause.
-            // Handle that aDataSource didn't produce theThing, i.e. show
-            // an error or otherwise recover from a bad state.
-            return
-        }
-        
-        // This is the happy path, ending naturally.
-        [self.worker workOnThing:theThing];
+```objc
+- (void)workOnSomethingComingFrom:(Source *)aDataSource {
+    Thing *theThing = [aDataSource thingFromSomewhere];
+    
+    if (!theThing) {
+        // This is the Guard Clause.
+        // Handle that aDataSource didn't produce theThing, i.e. show
+        // an error or otherwise recover from a bad state.
+        return
     }
+    
+    // This is the happy path, ending naturally.
+    [self.worker workOnThing:theThing];
+}
+```
 
 If most of your methods are written in this fashion, it's much more readable. If you want to find out what the happy path is, just ignore all conditions. If you want to know what may go wrong, look at the [Guard Clauses][gc].
 
 It's possible to do it this way in Swift, but then you have to do without implicitly unwrapped optionals, i.e. unwrap them manually:
 
-    #!swift
-    func workOnSomething(comingFrom aDataSource: Source) {
-        let maybeAThing = aDataSource.thingFromSomewhere()
-        if maybeAThing == nil {
-            // This is the Guard Clause.
-            // Handle that aDataSource didn't produce theThing, i.e. show
-            // an error or otherwise recover from a bad state.
-            return
-        }
-        let theThing = maybeAThing!
-        
-        // This is the happy path, ending naturally.
-        self.worker.work(theThing)
+```swift
+func workOnSomething(comingFrom aDataSource: Source) {
+    let maybeAThing = aDataSource.thingFromSomewhere()
+    if maybeAThing == nil {
+        // This is the Guard Clause.
+        // Handle that aDataSource didn't produce theThing, i.e. show
+        // an error or otherwise recover from a bad state.
+        return
     }
-
+    let theThing = maybeAThing!
+    
+    // This is the happy path, ending naturally.
+    self.worker.work(theThing)
+}
+```
 
 Erica called this linearizing the code. You get rid of nesting stuff. If you have to set a `NSErrorPointer`, the Guard Clauses will become even more involved. Look at Erica's example:
 
-    #!swift
-    func StringFromURL(url : NSURL, error errorPointer : NSErrorPointer) -> (NSString?) {
-        var error : NSError?
-    
-        // Fetch data. Blocking.
-        let data_ = NSData(contentsOfURL:url, options: NSDataReadingOptions(rawValue:0), error: &error)
-        if (data_ == nil) {
-            if errorPointer != nil {
-                errorPointer.memory = error
-            }
-            return nil
+```swift
+func StringFromURL(url : NSURL, error errorPointer : NSErrorPointer) -> (NSString?) {
+    var error : NSError?
+
+    // Fetch data. Blocking.
+    let data_ = NSData(contentsOfURL:url, options: NSDataReadingOptions(rawValue:0), error: &error)
+    if (data_ == nil) {
+        if errorPointer != nil {
+            errorPointer.memory = error
         }
-        let data = data_!
-    
-        // Convert to string.
-        let string_ = NSString(data: data, encoding: NSUTF8StringEncoding)
-        if (string_ == nil) {
-            if errorPointer != nil {
-                errorPointer.memory = BuildError(1, "Unable to build string from data")
-            }
-            return nil
-        }
-        let string = string_!
-    
-        return string
+        return nil
     }
+    let data = data_!
+
+    // Convert to string.
+    let string_ = NSString(data: data, encoding: NSUTF8StringEncoding)
+    if (string_ == nil) {
+        if errorPointer != nil {
+            errorPointer.memory = BuildError(1, "Unable to build string from data")
+        }
+        return nil
+    }
+    let string = string_!
+
+    return string
+}
+```
 
 [Guard clauses][gc] are used heavily. Compared to Objective-C, the Swift version is "wordier", as Erica says. I agree. You need two nested `if` conditions for each of the two steps, and you need to manually unwrap the optional.
 
@@ -129,71 +132,73 @@ Programming Ruby taught me a lot. I favor super-focused methods. Let's refactor 
 
 There are two Guard Clauses. This indicates two potentially failing processes are going on here. One for obtaining data, one for transforming data.  `StringFromURL(_:,_:)` is just the higher-order wrapper of these two operations.
 
-    #!swift
-    func StringFromURL(url : NSURL, error errorPointer : NSErrorPointer) -> (NSString?) {
-        let data = fetchData(url, error: errorPointer)
-        if (data == nil) {
-            return nil
-        }
-    
-        let string = stringFromData(data!, error: errorPointer)
-        if (string == nil) {
-            return nil
-        }
-        
-        return string
+```swift
+func StringFromURL(url : NSURL, error errorPointer : NSErrorPointer) -> (NSString?) {
+    let data = fetchData(url, error: errorPointer)
+    if (data == nil) {
+        return nil
+    }
+
+    let string = stringFromData(data!, error: errorPointer)
+    if (string == nil) {
+        return nil
     }
     
-    func fetchData(url : NSURL, error errorPointer : NSErrorPointer) -> NSData? {
-        var error : NSError?
-    
-        // Fetch data. Blocking.
-        let data = NSData(contentsOfURL:url, options: NSDataReadingOptions(rawValue:0), error: &error)
-        if (data == nil) {
-            if errorPointer != nil {
-                errorPointer.memory = error
-            }
-            return nil
+    return string
+}
+
+func fetchData(url : NSURL, error errorPointer : NSErrorPointer) -> NSData? {
+    var error : NSError?
+
+    // Fetch data. Blocking.
+    let data = NSData(contentsOfURL:url, options: NSDataReadingOptions(rawValue:0), error: &error)
+    if (data == nil) {
+        if errorPointer != nil {
+            errorPointer.memory = error
         }
-        
-        return data
+        return nil
     }
     
-    func stringFromData(data : NSData, error errorPointer : NSErrorPointer) -> NSString? {
-        let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-        
-        if (string == nil) {
-            if errorPointer != nil {
-                errorPointer.memory = BuildError(1, "Unable to build string from data")
-            }
-            return nil
+    return data
+}
+
+func stringFromData(data : NSData, error errorPointer : NSErrorPointer) -> NSString? {
+    let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+    
+    if (string == nil) {
+        if errorPointer != nil {
+            errorPointer.memory = BuildError(1, "Unable to build string from data")
         }
-        
-        return string
+        return nil
     }
+    
+    return string
+}
+```
 
 Both `fetchData` and `stringFromData` look like before. There's no need to distinguish `data_: NSData?` from `data: NSData!` in any place, which is a win in my opinion. Both look similar and are a little burden when reading the code.
 
 Also, the higher-order function `StringFromURL` doesn't need to worry about the optional `errorPointer` because the helper functions take care of this. `StringFromURL` delegates all of the error handling to the other functions.
 
-    #!swift
-    func StringFromURL(url : NSURL, error errorPointer : NSErrorPointer) -> (NSString?) {
-        fetchData(url, error: errorPointer).map { data in
-            stringFromData(data, error: errorPointer) {
-                
-            }
+```swift
+func StringFromURL(url : NSURL, error errorPointer : NSErrorPointer) -> (NSString?) {
+    fetchData(url, error: errorPointer).map { data in
+        stringFromData(data, error: errorPointer) {
+            
         }
-        if (data == nil) {
-            return nil
-        }
-    
-        let string = stringFromData(data!, error: errorPointer)
-        if (string == nil) {
-            return nil
-        }
-        
-        return string
     }
+    if (data == nil) {
+        return nil
+    }
+
+    let string = stringFromData(data!, error: errorPointer)
+    if (string == nil) {
+        return nil
+    }
+    
+    return string
+}
+```
 
 ## Striving to be concise: Monadic Approach
 
@@ -211,32 +216,35 @@ So two of four possible combinations of return value and error pointer are bogus
 
 You can use an `enum` instead to provide either a happy-path-value or an `NSError`-value:
 
-    #!swift
-    enum Result<T> {
-        case Value(Box<T>) 
-        //         ^^^ Box<T> instead of just T needed in Swift 1.1. to compile
-        case Error(NSError)
-    }
+```swift
+enum Result<T> {
+    case Value(Box<T>) 
+    //         ^^^ Box<T> instead of just T needed in Swift 1.1. to compile
+    case Error(NSError)
+}
+```
 
 The client call will look like the following:
 
-    #!swift
-    let zenAPI = NSURL(string: "https://api.github.com/zen")
-    let stringResult: Result<String> = StringFromURL(zenAPI!)
+```swift
+let zenAPI = NSURL(string: "https://api.github.com/zen")
+let stringResult: Result<String> = StringFromURL(zenAPI!)
 
-    switch (stringResult) {
-    case .Value(let value):
-        // work with value.unbox (of type String)
-    case .Error(let error):
-        // handle error case
-    }
+switch (stringResult) {
+case .Value(let value):
+    // work with value.unbox (of type String)
+case .Error(let error):
+    // handle error case
+}
+```
 
 The resulting `StringFromURL` method now is implemented as follows:
 
-    #!swift
-    func StringFromURL(url : NSURL) -> Result<String> {
-        return fetchData(url).transform { stringFromData($0) }.transform { stringFromNSString($0) }
-    }
+```swift
+func StringFromURL(url : NSURL) -> Result<String> {
+    return fetchData(url).transform { stringFromData($0) }.transform { stringFromNSString($0) }
+}
+```
 
 There you see the pipe-like transformations. (`transform(_:)` is actually `flatMap(_:)` in functional programming terms.)
 

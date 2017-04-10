@@ -11,85 +11,88 @@ I found the Foundation way to check for file existence very roundabout. It retur
 
 That's a silent cry for an enum. So I created a simple wrapper that tells me what to expect at a given URL:
 
-    #!swift
-    public enum FileExistence: Equatable {
-        case none
-        case file
-        case directory
+```swift
+public enum FileExistence: Equatable {
+    case none
+    case file
+    case directory
+}
+
+public func ==(lhs: FileExistence, rhs: FileExistence) -> Bool {
+
+    switch (lhs, rhs) {
+    case (.none, .none),
+         (.file, .file),
+         (.directory, .directory):
+        return true
+
+    default: return false
     }
+}
 
-    public func ==(lhs: FileExistence, rhs: FileExistence) -> Bool {
+extension FileManager {
+    public func existence(atUrl url: URL) -> FileExistence {
 
-        switch (lhs, rhs) {
-        case (.none, .none),
-             (.file, .file),
-             (.directory, .directory):
-            return true
+        var isDirectory: ObjCBool = false
+        let exists = self.fileExists(atPath: url.path, isDirectory: &isDirectory)
 
-        default: return false
+        switch (exists, isDirectory.boolValue) {
+        case (false, _): return .none
+        case (true, false): return .file
+        case (true, true): return .directory
         }
     }
-
-    extension FileManager {
-        public func existence(atUrl url: URL) -> FileExistence {
-
-            var isDirectory: ObjCBool = false
-            let exists = self.fileExists(atPath: url.path, isDirectory: &isDirectory)
-
-            switch (exists, isDirectory.boolValue) {
-            case (false, _): return .none
-            case (true, false): return .file
-            case (true, true): return .directory
-            }
-        }
-    }
+}
+```
 
 And since you're probably interested in well-tested components, here're the unit tests:
 
-    #!swift
-    class FileManager_ExistenceTests: XCTestCase {
+```swift
+class FileManager_ExistenceTests: XCTestCase {
 
-        func testExistence_NonExistingFile() {
+    func testExistence_NonExistingFile() {
 
-            let url = generatedTempFileURL()
-            XCTAssertEqual(FileManager.default.existence(atUrl: url), FileExistence.none)
-        }
-
-        func testExistence_ExistingFile() {
-
-            let url = generatedTempFileURL()
-
-            guard let _ = try? "some content".write(to: url, atomically: false, encoding: .utf8)
-                else { XCTFail("writing failed"); return }
-            XCTAssertEqual(FileManager.default.existence(atUrl: url), FileExistence.file)
-        }
-
-        func testExistence_ExistingDirectory() {
-
-            let url = createTempDirectory()
-            XCTAssertEqual(FileManager.default.existence(atUrl: url), FileExistence.directory)
-        }
+        let url = generatedTempFileURL()
+        XCTAssertEqual(FileManager.default.existence(atUrl: url), FileExistence.none)
     }
+
+    func testExistence_ExistingFile() {
+
+        let url = generatedTempFileURL()
+
+        guard let _ = try? "some content".write(to: url, atomically: false, encoding: .utf8)
+            else { XCTFail("writing failed"); return }
+        XCTAssertEqual(FileManager.default.existence(atUrl: url), FileExistence.file)
+    }
+
+    func testExistence_ExistingDirectory() {
+
+        let url = createTempDirectory()
+        XCTAssertEqual(FileManager.default.existence(atUrl: url), FileExistence.directory)
+    }
+}
+```
 
 ... and here are the helper functions to create temporary files:
 
-    #!swift
-    func createTempDirectory() -> URL {
+```swift
+func createTempDirectory() -> URL {
 
-        let fileName = "filemanagertest-temp-dir.\(NSUUID().uuidString)"
-        let fileUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+    let fileName = "filemanagertest-temp-dir.\(NSUUID().uuidString)"
+    let fileUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
 
-        try! FileManager.default.createDirectory(at: fileUrl, withIntermediateDirectories: false, attributes: nil)
+    try! FileManager.default.createDirectory(at: fileUrl, withIntermediateDirectories: false, attributes: nil)
 
-        return fileUrl
-    }
-    
-    func generatedTempFileURL() -> URL {
+    return fileUrl
+}
 
-        let fileName = "filemanagertest-temp.\(NSUUID().uuidString)"
-        let fileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+func generatedTempFileURL() -> URL {
 
-        return fileURL
-    }
+    let fileName = "filemanagertest-temp.\(NSUUID().uuidString)"
+    let fileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+
+    return fileURL
+}
+```
 
 If you happen to have a better name than `existence(atUrl:)` come to mind, I'd be happy to change it!

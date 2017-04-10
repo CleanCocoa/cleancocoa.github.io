@@ -16,24 +16,26 @@ That's what the [Law of Demeter][lod] is for. While "law" is way too strict, its
 
 For example, the following violates the principle:
     
-    #!swift
-    func violateThePrinciple(aCollaborator: Collaborator) {
-        let aStranger = aCollaborator.obtainFriend() // this is okay so far
-        aStranger.doSomething() // this is not, because it's 2nd level
-    }
+```swift
+func violateThePrinciple(aCollaborator: Collaborator) {
+    let aStranger = aCollaborator.obtainFriend() // this is okay so far
+    aStranger.doSomething() // this is not, because it's 2nd level
+}
+```
 
 You can get by through [providing facade methods](http://www.theswiftlearner.com/2015/03/05/the-law-of-demeter-and-the-9th-circle-of-hell/):
 
-    #!swift
-    func respectThePrinciple(aCollaborator: Collaborator) {
-        aCollaborator.doSomething()
+```swift
+func respectThePrinciple(aCollaborator: Collaborator) {
+    aCollaborator.doSomething()
+}
+
+extension Collaborator {
+    func doSomething() {
+        self.friend.doSomething()
     }
-    
-    extension Collaborator {
-        func doSomething() {
-            self.friend.doSomething()
-        }
-    }
+}
+```
 
 In your unit tests, you can add a `Collaborator` mock to verify the calls and then you're good to go. No multiple levels of mock objects and stubs. You may call this "shallow reaching" (opposed to "deep reaching"), although no one else calls it that.
 

@@ -29,10 +29,11 @@ Ruby has a long tradition of super-focused methods and very small classes. Swift
 
 Can be as easy as writing:
 
-    #!swift 
-    struct DateRange {
-        let start: Date
-        let end: Date
-    }
+```swift 
+struct DateRange {
+    let start: Date
+    let end: Date
+}
+```
 
 _Et voilà_, there you have a new explicit concept in your code base.

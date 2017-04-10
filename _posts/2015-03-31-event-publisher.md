@@ -47,21 +47,22 @@ I'd go as far to say only custom [Value Objects](http://martinfowler.com/bliki/V
 
 This is the example from the [last post][split] on the topic:
 
-    #!swift
-    extension Canvas {
-        func save(toFile file: File) {
-           // perform file saving of the canvas' data
-       
-           if (didFail) {
-               EventPublisher.sharedInstance.publish(
-                   SavingCanvasFailed(canvasId: self.canvasId))
-               return
-           }
-
+```swift
+extension Canvas {
+    func save(toFile file: File) {
+       // perform file saving of the canvas' data
+   
+       if (didFail) {
            EventPublisher.sharedInstance.publish(
-               CanvasSaved(canvasId: self.canvasId))
+               SavingCanvasFailed(canvasId: self.canvasId))
+           return
        }
-    }
+
+       EventPublisher.sharedInstance.publish(
+           CanvasSaved(canvasId: self.canvasId))
+   }
+}
+```
 
 There are two event types:
 
@@ -78,59 +79,61 @@ Talking about subscribers, let us look at subscription next before we look at `E
 
 From the same post, here's the subscriber code:
 
-    #!swift
-    extension CanvasController {
-        let canvasCollection = CanvasCollection()
+```swift
+extension CanvasController {
+    let canvasCollection = CanvasCollection()
+    
+    init() {
+        // ...
+        subscribeToCanvasEvents()
+    }
+
+    var savingFailedSubscription: Subscription!
+    var savingSucceededSubscription: Subscription!
+    
+    func subscribeToCanvasEvents() {
+        let publisher = EventPublisher.sharedInstance
+        savingFailedSubscription = publisher.subscribeTo(SavingCanvasFailed.self) {
+            [unowned self] event in
         
-        init() {
-            // ...
-            subscribeToCanvasEvents()
+            // notify user about failure and prompt 
+            // for picking another file
+            if shouldTryAgain {
+                canvas = self.canvasCollection.canvasWithId(event.canvasId)
+                self.saveCanvas(canvas)
+            }
         }
     
-        var savingFailedSubscription: Subscription!
-        var savingSucceededSubscription: Subscription!
+        savingSucceededSubscription = publisher.subscribeTo(CanvasSaved.self) {
+            [unowned self] event in
         
-        func subscribeToCanvasEvents() {
-            let publisher = EventPublisher.sharedInstance
-            savingFailedSubscription = publisher.subscribeTo(SavingCanvasFailed.self) {
-                [unowned self] event in
-            
-                // notify user about failure and prompt 
-                // for picking another file
-                if shouldTryAgain {
-                    canvas = self.canvasCollection.canvasWithId(event.canvasId)
-                    self.saveCanvas(canvas)
-                }
-            }
-        
-            savingSucceededSubscription = publisher.subscribeTo(CanvasSaved.self) {
-                [unowned self] event in
-            
-                // for example display subtle success message in the 
-                // corner of the screen
-            }
+            // for example display subtle success message in the 
+            // corner of the screen
         }
     }
+}
+```
 
 `subscribeToCanvasEvents` initializes two attributes of the subscriber, called "subscriptions". In the attached blocks, the subscriber can react to the events.
 
 A `Subscription` is a wrapped `NSObjectProtocol` instance. You obtain `NSObjectProtocol` through calling `addObserverForName` on a `NSNotificationCenter`. Instead of the subscriber adding itself to the notification center via `addObserver(_:, name:, object:)`, it obtains a dedicated subscriber object. Even this subscriber object has to be removed from the notification center using `removeObserver(_:)`. That's what `Subscription` does upon `deinit`:
 
-    #!swift
-    class Subscription {
-    
-        let observer: NSObjectProtocol
-        let eventPublisher: EventPublisher
-    
-        public init(observer: NSObjectProtocol, eventPublisher: EventPublisher) {
-            self.observer = observer
-            self.eventPublisher = eventPublisher
-        }
-    
-        deinit {
-            eventPublisher.unsubscribe(observer)
-        }
+```swift
+class Subscription {
+
+    let observer: NSObjectProtocol
+    let eventPublisher: EventPublisher
+
+    public init(observer: NSObjectProtocol, eventPublisher: EventPublisher) {
+        self.observer = observer
+        self.eventPublisher = eventPublisher
     }
+
+    deinit {
+        eventPublisher.unsubscribe(observer)
+    }
+}
+```
 
 This way, the "real" subscriber (`CanvasController` in this case) doesn't have to worry about managing subscriptions. When `CanvasController` is deallocated, its subscriptions will be, too, and thus they will remove themselves from the notification center through `EventPublisher.unsubscribe(_:)`.
 
@@ -140,60 +143,62 @@ Now we know how the straight-forward sending works, and we know how to create su
 
 To create events, here's the `Event` protocol which specifies the shared bare minimum of every event:
 
-    #!swift
-    typealias UserInfo = [NSObject : AnyObject]
-    
-    protocol Event {
-        /// The `EventType` to identify this kind of DomainEvent.
-        class var eventType: EventType { get }
-    
-        init(userInfo: UserInfo)
-        func userInfo() -> UserInfo
-        func notification() -> NSNotification
-    }
+```swift
+typealias UserInfo = [NSObject : AnyObject]
+
+protocol Event {
+    /// The `EventType` to identify this kind of DomainEvent.
+    class var eventType: EventType { get }
+
+    init(userInfo: UserInfo)
+    func userInfo() -> UserInfo
+    func notification() -> NSNotification
+}
+```
 
 ### The `CanvasSaved` Event Implementation
 
-    #!swift
-    enum EventType: String {
-        case CanvasSaved = "Canvas Saved"
-        case SavingCanvasFailed = "Saving Canvas Failed"
-        
-        var name: String {
-            return self.rawValue
-        }
+```swift
+enum EventType: String {
+    case CanvasSaved = "Canvas Saved"
+    case SavingCanvasFailed = "Saving Canvas Failed"
+    
+    var name: String {
+        return self.rawValue
     }
+}
+
+struct CanvasSaved: Event {
+    static var eventType: EventType {
+        return EventType.CanvasSaved
+    }
+
+    let canvasId: CanvasId
+
+    init(canvasId: CanvasId) {
+        self.canvasId = canvasId
+    }
+
+     init(userInfo: UserInfo) {
+        let canvas = userInfo["canvas"] as UserInfo
+        let canvasId = canvas["id"] as NSNumber
     
-    struct CanvasSaved: Event {
-        static var eventType: EventType {
-            return EventType.CanvasSaved
-        }
-    
-        let canvasId: CanvasId
-    
-        init(canvasId: CanvasId) {
-            self.canvasId = canvasId
-        }
-    
-         init(userInfo: UserInfo) {
-            let canvas = userInfo["canvas"] as UserInfo
-            let canvasId = canvas["id"] as NSNumber
-        
-            self.init(canvasId: canvasId)
-        }
-    
-        func userInfo() -> UserInfo {
-            return [
-                "canvas": [
-                    "id": canvasId.number
-                ]
+        self.init(canvasId: canvasId)
+    }
+
+    func userInfo() -> UserInfo {
+        return [
+            "canvas": [
+                "id": canvasId.number
             ]
-        }
-    
-        func notification() -> NSNotification {
-            return NSNotification(name: self.dynamicType.eventType.name, object: nil, userInfo: userInfo())
-        }
+        ]
     }
+
+    func notification() -> NSNotification {
+        return NSNotification(name: self.dynamicType.eventType.name, object: nil, userInfo: userInfo())
+    }
+}
+```
 
 The `EventType` enum is basically there just to make notification names unique.[^refl] I don't use an enum-to-class lookup during subscription, but pass in the type itself via `subscribe(CanvasSaved.self)`. You may want to change that, though. 
 
@@ -219,51 +224,52 @@ The nice thing about this is that you can replace either the `EventPublisher` wi
 
 At its core, it looks like this:
 
-    #!swift
-    class EventPublisher {
-        let notificationCenter: NSNotificationCenter
-        
-        convenience init() {
-            self.init(notificationCenter: NSNotificationCenter.defaultCenter())
-        }
-
-        init(notificationCenter: NSNotificationCenter) {
-            self.notificationCenter = notificationCenter
-        }
-        
-        func publish(event: Event) {
-            notificationCenter.postNotification(event.notification())
-        }
-        
-        func subscribe<T: DomainEvent>(eventKind: T.Type, 
-            usingBlock block: (T!) -> Void) -> EventSubscription {
-            
-            // Pick a different default queue if you want async event processing
-            let mainQueue = NSOperationQueue.mainQueue()
+```swift
+class EventPublisher {
+    let notificationCenter: NSNotificationCenter
     
-            return self.subscribe(eventKind, queue: mainQueue, usingBlock: block)
-        }
-
-        func subscribe<T: DomainEvent>(eventKind: T.Type, 
-            queue: NSOperationQueue, 
-            usingBlock block: (T!) -> Void) -> EventSubscription {
-            
-            let eventType: EventType = T.eventType
-            let observer = notificationCenter.addObserverForName(eventType.name, object: nil, queue: queue) {
-                notification in
-        
-                let userInfo = notification.userInfo!
-                let event: T = T(userInfo: userInfo)
-                block(event)
-            }
-            
-            return EventSubscription(observer: observer, eventPublisher: self)
-        }
-        
-        func unsubscribe(subscriber: AnyObject) {
-            notificationCenter.removeObserver(subscriber)
-        }
+    convenience init() {
+        self.init(notificationCenter: NSNotificationCenter.defaultCenter())
     }
+
+    init(notificationCenter: NSNotificationCenter) {
+        self.notificationCenter = notificationCenter
+    }
+    
+    func publish(event: Event) {
+        notificationCenter.postNotification(event.notification())
+    }
+    
+    func subscribe<T: DomainEvent>(eventKind: T.Type, 
+        usingBlock block: (T!) -> Void) -> EventSubscription {
+        
+        // Pick a different default queue if you want async event processing
+        let mainQueue = NSOperationQueue.mainQueue()
+
+        return self.subscribe(eventKind, queue: mainQueue, usingBlock: block)
+    }
+
+    func subscribe<T: DomainEvent>(eventKind: T.Type, 
+        queue: NSOperationQueue, 
+        usingBlock block: (T!) -> Void) -> EventSubscription {
+        
+        let eventType: EventType = T.eventType
+        let observer = notificationCenter.addObserverForName(eventType.name, object: nil, queue: queue) {
+            notification in
+    
+            let userInfo = notification.userInfo!
+            let event: T = T(userInfo: userInfo)
+            block(event)
+        }
+        
+        return EventSubscription(observer: observer, eventPublisher: self)
+    }
+    
+    func unsubscribe(subscriber: AnyObject) {
+        notificationCenter.removeObserver(subscriber)
+    }
+}
+```
 
 The full source is [available online][publisher], including using the Singleton pattern.
 
@@ -275,20 +281,21 @@ I never used `addObserverForName(_:,object:,queue:)` much in the past. In case y
 
 As I said above already, the resulting `EventSubscription` merely takes care of unsubscribing automatically when its reference is nilled out:
 
-    #!swift
-    class EventSubscription {
-        let observer: NSObjectProtocol
-        let eventPublisher: EventPublisher
-    
-        init(observer: NSObjectProtocol, eventPublisher: EventPublisher) {
-            self.observer = observer
-            self.eventPublisher = eventPublisher
-        }
-    
-        deinit {
-            eventPublisher.unsubscribe(observer)
-        }
+```swift
+class EventSubscription {
+    let observer: NSObjectProtocol
+    let eventPublisher: EventPublisher
+
+    init(observer: NSObjectProtocol, eventPublisher: EventPublisher) {
+        self.observer = observer
+        self.eventPublisher = eventPublisher
     }
+
+    deinit {
+        eventPublisher.unsubscribe(observer)
+    }
+}
+```
 
 ## Conclusion
 

@@ -32,23 +32,24 @@ Next to the placeholder, this extension also adds a `NotificationProxy` which re
 
 `NotificationProxy`, slightly rephrased in my own terms, looks like this:
 
-    #!swift
-    class NotificationProxy: UIView {
-        
-        weak var notificationHandler: NSObjectProtocol!
-        
-        lazy var notificationCenter: NSNotificationCenter! = {
-            return NSNotificationCenter.defaultCenter()
-        }()
-        
-        func addObserverForName(name: String?, object: AnyObject?, queue: NSOperationQueue?, usingBlock: (NSNotification!) -> ()) {
-            notificationHandler = notificationCenter.addObserverForName(name, object: object, queue: queue, usingBlock: usingBlock)
-        }
+```swift
+class NotificationProxy: UIView {
     
-        deinit {
-            notificationCenter.removeObserver(notificationHandler)
-        }
+    weak var notificationHandler: NSObjectProtocol!
+    
+    lazy var notificationCenter: NSNotificationCenter! = {
+        return NSNotificationCenter.defaultCenter()
+    }()
+    
+    func addObserverForName(name: String?, object: AnyObject?, queue: NSOperationQueue?, usingBlock: (NSNotification!) -> ()) {
+        notificationHandler = notificationCenter.addObserverForName(name, object: object, queue: queue, usingBlock: usingBlock)
     }
+
+    deinit {
+        notificationCenter.removeObserver(notificationHandler)
+    }
+}
+```
 
 It's a descendant of `UIView` so the extension can keep a strong reference to this helper object by using `addSubview(_:)`. It's a little hacky, but it works.
 

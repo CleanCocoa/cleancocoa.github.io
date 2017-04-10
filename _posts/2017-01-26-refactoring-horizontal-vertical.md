@@ -16,54 +16,57 @@ In this case, the `Presenter` also is a `ReSwift.StoreSubscriber` for good measu
 
 Transformation from one model type to another is very simple at first. So you create a method to do the job:
 
-    #!swift
-    class Presenter: ReSwift.StoreSubscriber {
-        let view: View // ...
-        
-        func newState(_ state: AppState) {
-            let viewModel = self.viewModel(from: state)
-            view.update(viewModel)
-        }
-        
-        fileprivate func viewModel(from state: AppState) -> ViewModel {
-            return ViewModel(label: String(state.count))
-        }
+```swift
+class Presenter: ReSwift.StoreSubscriber {
+    let view: View // ...
+    
+    func newState(_ state: AppState) {
+        let viewModel = self.viewModel(from: state)
+        view.update(viewModel)
     }
+    
+    fileprivate func viewModel(from state: AppState) -> ViewModel {
+        return ViewModel(label: String(state.count))
+    }
+}
+```
 
 But since you're a well-behaved Swift developer and love extensions, you end up with another implementation that does the job equally well but closer adheres to your team's conventions
 
-    #!swift
-    class Presenter: ReSwift.StoreSubscriber {
-        let view: View // ...
-        
-        func newState(_ state: AppState) {
-            let viewModel = ViewModel(from: state)
-            view.update(viewModel)
-        }
+```swift
+class Presenter: ReSwift.StoreSubscriber {
+    let view: View // ...
+    
+    func newState(_ state: AppState) {
+        let viewModel = ViewModel(from: state)
+        view.update(viewModel)
     }
-        
-    fileprivate extension ViewModel {
-        init(from state: AppState) {
-            self.label = String(state.count)
-        }
+}
+    
+fileprivate extension ViewModel {
+    init(from state: AppState) {
+        self.label = String(state.count)
     }
+}
+```
 
 Since both are private, it doesn't matter to the outside world. But the initializer is just as much a factory doing the job of adapting `AppState` to `ViewModel` as `viewModel(from:)`. If you (or your team) find these kinds of extensions confusing, then by all means: don't use them. Pick what suits your taste.
 
 Now the `ViewModel` gets more complex and you get a bit more uncomfortable with the actual adaptation logic:
 
-    #!swift
-    fileprivate extension ViewModel {
-        init(from state: AppState) {
-            if state.countIsVisible {
-                self.label = String(state.count)
-                self.actionText = "Increment!"
-            } else {
-                self.label = "Blank"
-                self.actionText = "Start Counting"
-            }
+```swift
+fileprivate extension ViewModel {
+    init(from state: AppState) {
+        if state.countIsVisible {
+            self.label = String(state.count)
+            self.actionText = "Increment!"
+        } else {
+            self.label = "Blank"
+            self.actionText = "Start Counting"
         }
     }
+}
+```
 
 Remember that this extension is still a factual private implementation detail of the `Presenter`, not of `ViewModel`, since nobody but the `Presenter` from the same file will ever know about it.
 
@@ -93,47 +96,49 @@ In this approach, you have 2 and not 1 flow of data affecting what's on screen.
 
 The corresponding stacks may look something like this:
 
-    #!swift
-    class LabelPresenter: ReSwift.StoreSubscriber {
-        let labelView: LabelView // ...
-        
-        func newState(_ state: AppState) {
-            let viewModel = LabelViewModel(from: state)
-            labelView.update(labelViewModel: viewModel)
-        }
-    }
+```swift
+class LabelPresenter: ReSwift.StoreSubscriber {
+    let labelView: LabelView // ...
     
-    fileprivate extension LabelViewModel {
-        init(from state: AppState) {
-            if state.countIsVisible {
-                self.label = String(state.count)
-            } else {
-                self.label = "Blank"
-            }
+    func newState(_ state: AppState) {
+        let viewModel = LabelViewModel(from: state)
+        labelView.update(labelViewModel: viewModel)
+    }
+}
+
+fileprivate extension LabelViewModel {
+    init(from state: AppState) {
+        if state.countIsVisible {
+            self.label = String(state.count)
+        } else {
+            self.label = "Blank"
         }
     }
+}
+```
 
 ... and one for the other:
 
-    #!swift
-    class ActionPresenter: ReSwift.StoreSubscriber {
-        let actionView: ActionView // ...
-        
-        func newState(_ state: AppState) {
-            let viewModel = ActionViewModel(from: state)
-            actionView.update(actionViewModel: viewModel)
-        }
-    }
+```swift
+class ActionPresenter: ReSwift.StoreSubscriber {
+    let actionView: ActionView // ...
     
-    fileprivate extension ActionViewModel {
-        init(from state: AppState) {
-            if state.countIsVisible {
-                self.actionText = "Increment!"
-            } else {
-                self.actionText = "Start Counting"
-            }
+    func newState(_ state: AppState) {
+        let viewModel = ActionViewModel(from: state)
+        actionView.update(actionViewModel: viewModel)
+    }
+}
+
+fileprivate extension ActionViewModel {
+    init(from state: AppState) {
+        if state.countIsVisible {
+            self.actionText = "Increment!"
+        } else {
+            self.actionText = "Start Counting"
         }
     }
+}
+```
 
 If you pay close attention, you will notice that I didn't just branch off into 2 presenters and 2 view models, but also into 2 view types. These would be protocols you implement in a single view component like a `UIViewController` which in turn delegates stuff down to the actual views, or you tie the presenters to these sub-views directly. That absolutely depends on the factoring of your user interface layer -- the presenters don't care as long as the protocol requirements are met.
 

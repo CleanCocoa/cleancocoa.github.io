@@ -22,13 +22,14 @@ You may replace these two with almost any one-to-many relationship parts. How do
 
 The obvious solution is to make it so that `Box` contains `Item`s:
 
-    #!swift
-    class Item {
-        let title: String
-    }
-    class Box {
-        var items = [Item]()
-    }
+```swift
+class Item {
+    let title: String
+}
+class Box {
+    var items = [Item]()
+}
+```
 
 That's it for managing the data relationship. Client code has full access to the `items` array: it adds, removes, reorders, and maybe even breaks it directly.
 
@@ -40,39 +41,42 @@ In this case, a `Box` is the Aggregate Root. The Aggregate consists of a `Box` w
 
 Consequently, if we access `Item`s, we can only do so through a `Box`. We want to add, remove, and iterate over them. Since `Item`s are not meant to be in any particular order, it doesn't make sense to query them by index.
 
-    #!swift
-    class Box {
-        private var items = [Item]()
-        
-        func addItem(item: Item) { ... }
-        func removeItem(item: Item) { ... }
-        func eachItem(block: (Item) -> ()) { ... }
-    }
+```swift
+class Box {
+    private var items = [Item]()
+    
+    func addItem(item: Item) { ... }
+    func removeItem(item: Item) { ... }
+    func eachItem(block: (Item) -> ()) { ... }
+}
+```
 
 All interactions flow through `Box`. `Item`s are essentially and conceptually a part of `Box`. The collection behind the scenes is hidden from client code. If something wants to modify the contents of a `Box`, it has to do so through its public interface. 
 
 An even stricter version may hide `Item` creation altogether and only allow indirect modifications. `Item`s are created and referenced by their title attribute, which may suffice in some cases and totally depends on the specifications:
 
-    #!swift
-    class StrictBox {
-        private var items = [Item]()
-        
-        func addItem(#itemTitle: String) { ... }
-        func removeItem(#itemTitle: String) { ... }
-        func eachItemTitle(block: (String) -> ()) { ... }
-    }
+```swift
+class StrictBox {
+    private var items = [Item]()
+    
+    func addItem(#itemTitle: String) { ... }
+    func removeItem(#itemTitle: String) { ... }
+    func eachItemTitle(block: (String) -> ()) { ... }
+}
+```
 
 That's it for the proof of concept. Let us stick to the less strict version.
 
 Say we want to move `Item`s around between `Box`es. `Item`s, being Entities themselves, have an identity of their own over time. To delete one instance and add another with similar attributes instead of moving the real thing around doesn't fit the language we use. Keeping the model close to our language, we may come up with this:
 
-    #!swift
-    extension Box {
-        func moveItem(item: Item, toBox: Box) {
-            removeItem(item)
-            toBox.addItem(item)
-        }
+```swift
+extension Box {
+    func moveItem(item: Item, toBox: Box) {
+        removeItem(item)
+        toBox.addItem(item)
     }
+}
+```
 
 I chose to add the `items: [Item]` attribute to `Box` early on because this is my naive take on one-to-many relationship resolution. Some persistence mechanisms may actually benefit from this. (Core Data managed objects for example.) Some begin to choke because you have to keep your convenient collection in sync with changing data in the data store.
 
@@ -86,80 +90,84 @@ As a rule of thumb, Aggregate Roots should reference each other via identity. Th
 
 Now we have to change things a bit and replace the class definitions with the following:
 
-    #!swift
-    class Item {
-        var boxId: BoxId?
-        let itemId: ItemId
-        let title: String
-        
-        var isLyingAround: Bool {
-            return boxId == nil
-        }
-    }
+```swift
+class Item {
+    var boxId: BoxId?
+    let itemId: ItemId
+    let title: String
     
-    class Box {
-        let boxId: BoxId
+    var isLyingAround: Bool {
+        return boxId == nil
     }
+}
+
+class Box {
+    let boxId: BoxId
+}
+```
 
 Since `Item` is responsible for itself, moving it around can be modeled thus:
 
-    #!swift
-    extension Item {
-        func moveToBox(box: Box) {
-            boxId = box.boxId
-        }
-        
-        func layOnFloor() {
-            boxId = nil
-        }
+```swift
+extension Item {
+    func moveToBox(box: Box) {
+        boxId = box.boxId
     }
+    
+    func layOnFloor() {
+        boxId = nil
+    }
+}
+```
 
 Say we need to print a list of a `Box`'s contents. At least at this point do we need a means to find all `Item`s of a given `Box`.
 
 Since `Box` doesn't own the `Item` objects anymore, we need a Service Object in the Domain (!) to hold the business logic. Also, I add the Repository protocol definition to accessing the data store at this point so you know how things work:
 
-    #!swift
-    protocol ItemRepository {
-        func items(#boxId: BoxId) -> [Item]
-        func nextId() -> ItemId
-        func addItem(item: Item)
-        func removeItem(itemId: ItemId)
-    }
+```swift
+protocol ItemRepository {
+    func items(#boxId: BoxId) -> [Item]
+    func nextId() -> ItemId
+    func addItem(item: Item)
+    func removeItem(itemId: ItemId)
+}
+
+class PrintBoxContents {
+    let itemRepository: ItemRepository
     
-    class PrintBoxContents {
-        let itemRepository: ItemRepository
+    func print(box: Box, printer: Printer) {
+        let boxId = box.boxId
+        let items = itemRepository.items(boxId: boxId)
         
-        func print(box: Box, printer: Printer) {
-            let boxId = box.boxId
-            let items = itemRepository.items(boxId: boxId)
-            
-            printer.printContentList(box, items)
-        }
+        printer.printContentList(box, items)
     }
+}
+```
 
 To find all `Item`s with a given `BoxId` is now the adequate way to de-reference associations.
 
 Assume we should limit creating new `Item`s to the scope of a `Box`, and the lying-on-the-floor case should not be encouraged by creating free-floating `Item`s, we have to do something like this:
 
-    #!swift
-    extension Box {
-        func item(title: String, identityProvider: ItemIdentityProvider) {
-            let itemId = identityProvider.nextId()
-            return Item(itemId: itemId, title: title, boxId: self.boxId)
-        }
+```swift
+extension Box {
+    func item(title: String, identityProvider: ItemIdentityProvider) {
+        let itemId = identityProvider.nextId()
+        return Item(itemId: itemId, title: title, boxId: self.boxId)
     }
+}
+
+extension Item {
+    init(itemId: ItemId, title: String, boxId: BoxId) { ... }
+}
+
+class ItemIdentityProvider {
+    let itemRepository: ItemRepository
     
-    extension Item {
-        init(itemId: ItemId, title: String, boxId: BoxId) { ... }
+    func nextId() -> ItemId {
+        return itemRepository.nextId()
     }
-    
-    class ItemIdentityProvider {
-        let itemRepository: ItemRepository
-        
-        func nextId() -> ItemId {
-            return itemRepository.nextId()
-        }
-    }
+}
+```
 
 Why this weird `ProvidesItemIdentity` dance? Because injecting the `ItemRepository` into `Box.item(...)` would expose too much power to `Box`.
 

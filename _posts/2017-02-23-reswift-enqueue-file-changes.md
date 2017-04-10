@@ -18,44 +18,46 @@ In short, you have to extract the state information from the "save file" action 
 
 "Save file" has the state info of "which file" and "what contents". In order to enqueue multiple changes to the same file, add a UUID to each file change to identify the event:
 
-    #!swift
-    struct FileContentChange {
-        let url: URL
-        let content: String
-        let uuid: UUID
-    }
+```swift
+struct FileContentChange {
+    let url: URL
+    let content: String
+    let uuid: UUID
+}
+```
 
 Instances of this type are enqueued with the `PendingFileChanges` substate. I used real [FIFO queues](https://github.com/raywenderlich/swift-algorithm-club/tree/master/Queue) at first and solely relied on the order, but later switched to simple arrays. I'll tell you why in a minute.
 
 
-    #!swift
-    struct AppState: StateType {
-        var pendingFileChanges: PendingFileChangesState = .empty
+```swift
+struct AppState: StateType {
+    var pendingFileChanges: PendingFileChangesState = .empty
+}
+
+struct PendingFileChangesState: StateType {
+
+    static var empty: PendingFileChangesState {
+        return PendingFileChangesState(fileContentChanges: [])
     }
     
-    struct PendingFileChangesState: StateType {
-    
-        static var empty: PendingFileChangesState {
-            return PendingFileChangesState(fileContentChanges: [])
-        }
+    public fileprivate(set) var fileContentChanges: [FileContentChange]
+
+    public var nextFileContentChange: FileContentChange? {
+        return fileContentChanges.first
+    }
+
+    public mutating func insert(fileContentChange: FileContentChange) {
+        fileContentChanges.append(fileContentChange)
+    }
+
+    public mutating func remove(fileContentChange: FileContentChange) {
+        guard let index = fileContentChanges.index(of: fileContentChange) 
+            else { return }
         
-        public fileprivate(set) var fileContentChanges: [FileContentChange]
-
-        public var nextFileContentChange: FileContentChange? {
-            return fileContentChanges.first
-        }
-
-        public mutating func insert(fileContentChange: FileContentChange) {
-            fileContentChanges.append(fileContentChange)
-        }
-
-        public mutating func remove(fileContentChange: FileContentChange) {
-            guard let index = fileContentChanges.index(of: fileContentChange) 
-                else { return }
-            
-            fileContentChanges.remove(at: index)
-        }
+        fileContentChanges.remove(at: index)
     }
+}
+```
 
 Some long-running service object will listen to changes to this substate and perform the necessary writes periodically. 
 
@@ -65,50 +67,51 @@ When it finishes a write operation, it in turn dispatches an action so the fitti
 
 Here's a sample service wireframe:
     
-    #!swift
-    typealias DefaultStore = Store<AppState>
+```swift
+typealias DefaultStore = Store<AppState>
+
+class WriteFileChanges: StoreSubscriber {
+    let store: DefaultStore
+
+    public init(store: DefaultStore) {
+        self.store = store
+    }
+
+    fileprivate(set) var lastChange: FileContentChange?
+
+    public func newState(state: PendingFileChangesState) {
     
-    class WriteFileChanges: StoreSubscriber {
-        let store: DefaultStore
-
-        public init(store: DefaultStore) {
-            self.store = store
-        }
-
-        fileprivate(set) var lastChange: FileContentChange?
-
-        public func newState(state: PendingFileChangesState) {
-        
-            // If the state update shows the queue is empty, 
-            // reset the cache.
-            guard let change = state.nextFileContentChange else {
-                lastChange = nil
-                return
-            }
-            
-            // Skip identical, unprocessed updates.
-            guard change.uuid != lastChange.uuid else { return }
-            
-            // Set the cached value to prevent duplicate changes.
-            lastChange = change
-
-            delegatePerformingTheFileWriteOperation() { success in
-                if !success { 
-                    // TODO: handle error :)
-                }
-                
-                store.dispatch(CompletingFileContentChange(change))
-            }
+        // If the state update shows the queue is empty, 
+        // reset the cache.
+        guard let change = state.nextFileContentChange else {
+            lastChange = nil
+            return
         }
         
-        fileprivate func delegatePerformingTheFileWriteOperation(
-            completion: (Bool) -> Void) {
+        // Skip identical, unprocessed updates.
+        guard change.uuid != lastChange.uuid else { return }
+        
+        // Set the cached value to prevent duplicate changes.
+        lastChange = change
+
+        delegatePerformingTheFileWriteOperation() { success in
+            if !success { 
+                // TODO: handle error :)
+            }
             
-            // Use FileManager or String.write(toURL:) etc.
-            
-            completion(true)
+            store.dispatch(CompletingFileContentChange(change))
         }
     }
+    
+    fileprivate func delegatePerformingTheFileWriteOperation(
+        completion: (Bool) -> Void) {
+        
+        // Use FileManager or String.write(toURL:) etc.
+        
+        completion(true)
+    }
+}
+```
 
 So you end up with `WriteFileChanges` as a service that processes a part of the `PendingFileChangesState` queue. To let the app know when it has finished, i.e. let a reducer remove the entry from the pending changes queue, it dispatches a `CompletingFileContentChange` action. I leave this simple wrapper as an exercise to the reader.
 

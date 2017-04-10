@@ -34,10 +34,11 @@ What are informational messages?
 
 Consider the following three example lines of code and their return values:
 
-    #!swift
-    canvas.clear()       // -> Void
-    canvas.size()        // -> Size
-    canvas.save(toFile:) // -> Bool
+```swift
+canvas.clear()       // -> Void
+canvas.size()        // -> Size
+canvas.save(toFile:) // -> Bool
+```
 
 `clear()` obviously is a Command. It's phrased in imperative form. `size()` is a Query. It's focused on a property, phrased as a noun, returning some value.
 
@@ -45,20 +46,21 @@ Consider the following three example lines of code and their return values:
 
 Let's look at how it's used to see what it is. This is `saveCanvas(_:)` of `CanvasController`:
 
-    #!swift
-    /// Try to save to a user-picked file until success or cancelled by user.
-    func saveCanvas(canvas: Canvas) {
-        var savingSucceeded = false
-        do {
-            if let destinationFile = FilePicker.pickFile() {
-                // Try to save if the user picks a file
-                savingSucceeded = canvas.save(toFile: destinationFile)
-            } else {
-                // Abort if the user doesn't pick a file
-                return
-            }
-        } while !savingSucceeded
-    }
+```swift
+/// Try to save to a user-picked file until success or cancelled by user.
+func saveCanvas(canvas: Canvas) {
+    var savingSucceeded = false
+    do {
+        if let destinationFile = FilePicker.pickFile() {
+            // Try to save if the user picks a file
+            savingSucceeded = canvas.save(toFile: destinationFile)
+        } else {
+            // Abort if the user doesn't pick a file
+            return
+        }
+    } while !savingSucceeded
+}
+```
 
 Mostly, it's a command, **because the caller cares about the effect**, that is data being saved. `CanvasController` commands the `Canvas` to persist to a file.
 
@@ -74,51 +76,52 @@ Objects usually inform proactively by sending notifications to whichever object 
 
 This is how both `CanvasController` could do the save--success dance instead using events. Imagining everything else of `Canvas` and a `CanvasController` being in place, these are the methods in questions:
 
-    #!swift
-    extension Canvas {
-        func save(toFile file: File) {
-           // perform file saving of the canvas' data
-       
-           if (didFail) {
-               EventPublisher.sharedInstance.publish(
-                   SavingCanvasFailed(canvasId: self.canvasId))
-               return
-           }
-
+```swift
+extension Canvas {
+    func save(toFile file: File) {
+       // perform file saving of the canvas' data
+   
+       if (didFail) {
            EventPublisher.sharedInstance.publish(
-               CanvasSaved(canvasId: self.canvasId))
+               SavingCanvasFailed(canvasId: self.canvasId))
+           return
        }
+
+       EventPublisher.sharedInstance.publish(
+           CanvasSaved(canvasId: self.canvasId))
+   }
+}
+
+extension CanvasController {
+    func saveCanvas(canvas: Canvas) {
+        if let destinationFile = FilePicker.pickFile() {
+            canvas.save(toFile: destinationFile)
+        }
     }
 
-    extension CanvasController {
-        func saveCanvas(canvas: Canvas) {
-            if let destinationFile = FilePicker.pickFile() {
-                canvas.save(toFile: destinationFile)
+    // Call this in init(), for example, to subscribe 
+    // to events automatically.
+    func subscribeToCanvasEvents() {
+        EventPublisher.sharedInstance.subscribeTo(SavingCanvasFailed.self) {
+            [unowned self] event in
+        
+            // notify user about failure and prompt 
+            // for picking another file
+            if shouldTryAgain {
+                canvas = self.canvasCollection.canvasWithId(event.canvasId)
+                self.saveCanvas(canvas)
             }
         }
     
-        // Call this in init(), for example, to subscribe 
-        // to events automatically.
-        func subscribeToCanvasEvents() {
-            EventPublisher.sharedInstance.subscribeTo(SavingCanvasFailed.self) {
-                [unowned self] event in
-            
-                // notify user about failure and prompt 
-                // for picking another file
-                if shouldTryAgain {
-                    canvas = self.canvasCollection.canvasWithId(event.canvasId)
-                    self.saveCanvas(canvas)
-                }
-            }
+        EventPublisher.sharedInstance.subscribeTo(CanvasSaved.self) {
+            [unowned self] event in
         
-            EventPublisher.sharedInstance.subscribeTo(CanvasSaved.self) {
-                [unowned self] event in
-            
-                // for example display subtle success message in the 
-                // corner of the screen
-            }
+            // for example display subtle success message in the 
+            // corner of the screen
         }
     }
+}
+```
 
 Depending on the rest of the application, of course, this code can have the following benefits:
 

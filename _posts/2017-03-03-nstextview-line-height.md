@@ -19,17 +19,18 @@ So this might not be The Truth, but it helps me deal with shitty software. I don
 
 Hunting for Core Text/TextKit callbacks, `NSTextStorageDelegate` seems to provide a good customization point:
 
-    #!swift
-    func textStorage(
-        _ textStorage: NSTextStorage, 
-        didProcessEditing editedMask: NSTextStorageEditActions, 
-        range editedRange: NSRange, 
-        changeInLength delta: Int
-    ) {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 2.0
-        textStorage.addAttributes([NSParagraphStyleAttributeName : paragraphStyle], range: editedRange)
-    }
+```swift
+func textStorage(
+    _ textStorage: NSTextStorage, 
+    didProcessEditing editedMask: NSTextStorageEditActions, 
+    range editedRange: NSRange, 
+    changeInLength delta: Int
+) {
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.lineHeightMultiple = 2.0
+    textStorage.addAttributes([NSParagraphStyleAttributeName : paragraphStyle], range: editedRange)
+}
+```
 
 Of course it makes sense to store the global `paragraphStyle` once and re-apply it here. I don't know if this is the best place to put it, though. Re-applying all the `NSAttributedString` settings _while typing_ might not perform best.
 

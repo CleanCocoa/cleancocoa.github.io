@@ -9,16 +9,17 @@ comments: on
 
 The following code works as expected:
 
-    #!swift
-    class FooCollection {
-        private var items = [Foo]()
-    
-        func removeAllItems() -> [Foo] {
+```swift
+class FooCollection {
+    private var items = [Foo]()
 
-            defer { items.removeAll() }
-            return items
-        }
+    func removeAllItems() -> [Foo] {
+
+        defer { items.removeAll() }
+        return items
     }
+}
+```
     
 But do you know what "expected" means in this case?
 
@@ -28,9 +29,10 @@ The `removeAllItems` method returns an array of items. If the internal collectio
 
 Say the author had added a documentation line:
 
-    #!swift
-    /// - returns: Array of items that were removed.
-    func removeAllItems() -> [Foo] { // ... }
+```swift
+/// - returns: Array of items that were removed.
+func removeAllItems() -> [Foo] { // ... }
+```
 
 Now that should tip the scale! So the internal collection of items is returned _and afterwards_ emptied. Aha! How clever!
 
@@ -40,15 +42,16 @@ As a critical reader, you should be able to solve the puzzle _and_ call the auth
 
 I was curious about the outcome of this approach so I just tried it before writing this up. Then I deleted the \"\"\"clever\"\"\" code and replaced it with what I had before:
 
-    #!swift
-    class FooCollection {
-        private var items = [Foo]()
-    
-        func removeAllItems() -> [Foo] {
-            let removedItems = items
-            items.removeAll()
-            return removedItems
-        }
+```swift
+class FooCollection {
+    private var items = [Foo]()
+
+    func removeAllItems() -> [Foo] {
+        let removedItems = items
+        items.removeAll()
+        return removedItems
     }
+}
+```
 
 I prefer this any day. I hope you do, too.
