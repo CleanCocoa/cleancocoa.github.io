@@ -6,6 +6,9 @@ title: Make Money Outside the Mac App Store
 
 <div class="hero">
     <div class="hero__cover">
+        
+<!--ct: TODO replace link-->
+        
         <a href="http://sites.fastspring.com/christiantietze/instant/fastspringbook" class="imagelink"><img src="/assets/books/fastspring-book_102.jpg" alt="book cover" title="Make Money Outside the Mac App Store book cover" class="hero__image"/></a>
     </div>
 
@@ -18,7 +21,7 @@ title: Make Money Outside the Mac App Store
     <div class="actions">
         <ul class="actions__buying">
             <li class="actions__buying__item">
-                <a class="action action--buy action--buy--main" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store"><span class="cta">Buy for $20</span><br>(PDF, EPUB, & Kindle)</a>                
+                <a class="action action--buy action--buy--main" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store"><span class="cta">Buy for $22</span><br>(PDF, EPUB, & Kindle)</a>
             </li>
             
             <li class="actions__buying__item">
@@ -92,7 +95,7 @@ It's easy to get all the flexibility of selling outside the MAS with next to no 
 <div class="actions">
     <ul class="actions__buying">
         <li class="actions__buying__item">
-            <a class="action action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store"><span class="cta">Buy for $20</span> (PDF, EPUB, & Kindle)</a>
+            <a class="action action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store"><span class="cta">Buy for $22</span> (PDF, EPUB, & Kindle)</a>
         </li>
         
         <li class="actions__buying__item">
@@ -147,7 +150,7 @@ Become independent, too. Join the ranks of successful indie developers who make 
 <div class="actions">
     <ul class="actions__buying">
         <li class="actions__buying__item">
-            <a class="action action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store"><span class="cta">Buy for $20</span> (PDF, EPUB, & Kindle)</a>
+            <a class="action action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store"><span class="cta">Buy for $22</span> (PDF, EPUB, & Kindle)</a>
         </li>
         
         <li class="actions__buying__item">
