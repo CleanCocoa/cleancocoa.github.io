@@ -7,7 +7,7 @@ comments: on
 preview: fulltext
 ---
 
-{% include figure.md src="/assets/blog/fastspring-book-discount.jpg" alt="book cover" url="/books/make-money-outside-mac-app-store-fastspring/" %}
+{% include figure.md src="/assets/books/fastspring-book-discount.jpg" alt="book cover" url="/books/make-money-outside-mac-app-store-fastspring/" %}
 
 Today I'm proud to announce the release of my e-book _Make Money Outside the Mac App Store_! 
 

@@ -41,7 +41,7 @@ Here are the few books I already finished.
 ## Sales and Marketing
 
 <div class="product">
-    <img src="/assets/books/fastspring-book_102.jpg" title="Make Money Outside the Mac App Store" alt="book cover" class="product__shot"/>  
+    <img src="/assets/books/fastspring-book_110.jpg" title="Make Money Outside the Mac App Store" alt="book cover" class="product__shot"/>  
 
     <div class="product__content">
         <h3 class="product__title"><a href="product__link" href="/books/make-money-outside-mac-app-store/">Make Money Outside the Mac App Store</a></h3>
@@ -50,6 +50,12 @@ Here are the few books I already finished.
             <strong>Own your products and know your customers: sell outside the Mac App Store.</strong> In a few hours, you'll have in-app purchases, a trial mode, and piracy protection all set. The book includes fully functional sample projects and code ready to be copied into your app.
         </p>
   
+        <ul class="product__details">
+            <li>Swift 3 ready</li>
+            <li>PDF, EPUB, and Kindle download</li>
+            <li>Lifetime updates</li>
+        </ul>
+
         <div class="actions actions--small">
             <a class="action action--small action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store">Buy for $20</a>
       

@@ -9,7 +9,7 @@ title: Make Money Outside the Mac App Store
         
 <!--ct: TODO replace link-->
         
-        <a href="http://sites.fastspring.com/christiantietze/instant/fastspringbook" class="imagelink"><img src="/assets/books/fastspring-book_102.jpg" alt="book cover" title="Make Money Outside the Mac App Store book cover" class="hero__image"/></a>
+        <a href="http://sites.fastspring.com/christiantietze/instant/fastspringbook" class="imagelink"><img src="/assets/books/fastspring-book_110.jpg" alt="book cover" title="Make Money Outside the Mac App Store book cover" class="hero__image"/></a>
     </div>
 
     <h2 class="hero__heading">It sucks to throw 30% of your hard-earned income out of the window</h2>
@@ -139,8 +139,8 @@ By the way, I just found out FastSpring repeatedly won awards. They were finalis
 
 ## Technical Details
 
-* Current version: 1.0.2 (2016-03-22)
-* Written in the latest Swift 2.2
+* Current version: 1.1.0 (2017-02-14)
+* Written in the latest Swift 3.0
 * Comes as PDF, EPUB, and MOBI
 * 2 copy & paste-ready application frameworks
 * Including more than 200 unit tests

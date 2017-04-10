@@ -7,7 +7,7 @@ comments: on
 preview: fulltext
 ---
 
-{% include figure.md src="/assets/blog/fastspring-book_101.png" alt="book cover" url="http://amzn.to/1nMVWDu" %}
+{% include figure.md src="/assets/books/fastspring-book_101.png" alt="book cover" url="http://amzn.to/1nMVWDu" %}
 
 My e-book about creating and selling apps for Mac without the Mac App Store is **now [available on amazon.com](http://amzn.to/1nMVWDu)** if you prefer a print edition!
 

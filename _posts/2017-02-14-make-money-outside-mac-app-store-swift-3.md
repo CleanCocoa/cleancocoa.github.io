@@ -3,11 +3,11 @@ title: Make Money Outside the Mac App Store – Swift 3 Update
 created_at: 2017-02-14 10:21:27 +0100
 kind: worklog
 tags: [ announcement, fastspring, appstore, ebook ]
-shared_image: fastspring-book_110.jpg
+shared_image: "books/fastspring-book_110.jpg"
 comments: on
 ---
 
-{% include figure.md src="/assets/blog/fastspring-book_110.jpg" alt="book cover" url="http://ct.dev/books/make-money-outside-mac-app-store-fastspring/" %}
+{% include figure.md src="/assets/books/fastspring-book_110.jpg" alt="book cover" url="http://ct.dev/books/make-money-outside-mac-app-store-fastspring/" %}
 
 Ladies and gentlemen, I have finished updating my e-book about ditching the app store and selling your apps with the help of FastSpring for Swift 3!
 
