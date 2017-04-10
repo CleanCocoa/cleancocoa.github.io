@@ -15,7 +15,7 @@ So while I was mostly sick at home for the last couple weeks, I spent my time co
 
 {% include figure.md src="/assets/blog/2017/fatsidebar.png" alt="logo" url="https://github.com/CleanCocoa/FatSidebar" %}
 
-**[Find `FatSadebar` on GitHub!](https://github.com/CleanCocoa/FatSidebar)**
+**[Find `FatSidebar` on GitHub!](https://github.com/CleanCocoa/FatSidebar)**
 
 I have never written my own custom view component from scratch before. I helped improve [KPCTabsControl][kpc] for Swift 3 when I created TableFlip last year. And of course I participated in a lot of smaller open source projects, too. But I never started from scratch, and that was cool.
 
