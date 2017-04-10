@@ -138,8 +138,7 @@ a {
   border-bottom-color: $link-color;
 
   &:visited {
-    $color: darken($brand-color, 15%);;
-    color: $color;
+    color: $link-color;
   }
 
   &:hover {
