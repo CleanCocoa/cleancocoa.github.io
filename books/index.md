@@ -57,7 +57,7 @@ Here are the few books I already finished.
         </ul>
 
         <div class="actions actions--small">
-            <a class="action action--small action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store">Buy for $20</a>
+            <a class="action action--small action--buy" href="https://cleancocoa.onfastspring.com/make-money-outside-the-mac-app-store" data-fsc-action="Reset,Add,Checkout" data-fsc-item-path-value="make-money-outside-the-mac-app-store">Buy for $22</a>
       
             <a class="action action--small action--details" href="/books/make-money-outside-mac-app-store/">More Details</a>
         </div>
