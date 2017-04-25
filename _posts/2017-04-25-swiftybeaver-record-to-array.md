@@ -1,7 +1,6 @@
 ---
 title: "SwiftyBeaver: Record to Array"
 created_at: 2017-04-25 07:42:30 +0200
-kind: worklog
 tags: [ log, error ]
 comments: on
 ---
@@ -10,7 +9,8 @@ I am using [SwiftyBeaver](https://github.com/SwiftyBeaver/SwiftyBeaver) in Table
 
 Except for error reporting. I do not want to attach the whole debug log when folks may report a simple problem. So I figured: maybe it'll help to have the last 5 or 10 log messages attached upon a first error encounter.
 
-So I wrote a SwiftyBeaver "in memory" destination that is set up next to a file and a console destination: 
+So I wrote a SwiftyBeaver "in memory" destination that is set up next to a file and a console destination:
+
 
 ```swift
 class InMemoryDestination: BaseDestination {
@@ -39,7 +39,7 @@ let logMessages = lastLogMessages().joined(separator: "\n")
 reportError(error: error, additionalInfo: logMessages)
 ```
 
-`lastLogMessages` is a closure so it can be swapped during runtime:
+Here, `lastLogMessages` is a closure so it can be swapped during runtime:
 
 ```swift
 fileprivate(set) var lastLogMessages: () -> [String] = { return [] }
