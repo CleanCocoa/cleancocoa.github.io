@@ -5,7 +5,7 @@ tags: [ swift ]
 comments: on
 ---
 
-For quite a while I didn't notice `Sequence.first(where:)` exists. It's like `first`, only with a condition. I have now happily migrated from my self-baked `findFirst` to this method -- only to find out today that there's not `last(where:)` equivalent.
+For quite a while I didn't notice `Sequence.first(where:)` exists. It's like `first`, only with a condition. [Proposed and implemented](https://github.com/apple/swift/pull/2529/) by [Russ Bishop](http://russbishop.net), by the way. I have now happily migrated from my self-baked `findFirst` to this method -- only to find out today that there's not `last(where:)` equivalent.
 
 Makes sense at first, since `Sequence` is not stride-able backwards. But `BidirectionalCollection` is, and thus Array.
 
