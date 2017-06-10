@@ -16,12 +16,14 @@ In a huge collection of stuff, it's probably too costly to simple call `array.re
 ```swift
 extension BidirectionalCollection
 where Self.Indices.Iterator.Element == Self.Index {
- 
-    func last(where predicate: (Self.Iterator.Element) -> Bool) -> Self.Iterator.Element? {
+
+    func last(
+        where predicate: (Self.Iterator.Element) throws -> Bool
+        ) rethrows -> Self.Iterator.Element? {
 
         for index in self.indices.reversed() {
             let element = self[index]
-            if predicate(element) {
+            if try predicate(element) {
                 return element
             }
         }
