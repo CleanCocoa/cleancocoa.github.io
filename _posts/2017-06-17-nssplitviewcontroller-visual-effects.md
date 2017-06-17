@@ -14,6 +14,8 @@ This was 0% my own genius and 100% thanks to a beta tester. (Thanks, Michel!)
 
 I couldn't reproduce this in a simple test app, no matter the settings of the views. Until I looked at the implementation of the split view controller. In the real app, I manage the split view with a `NSSplitViewController` subclass. Using this controller class, all of a sudden `NSSplitViewItem`s are being wrapped in `_NSSplitViewItemViewWrapper`, each containing a `NSVisualEffectsView`. The dividers become "vibrant", too.
 
+**`NSSplitViewController` only wraps the main pane in a visual effects view.** ([rdar://4985026085126144](http://openradar.appspot.com/radar?id=4985026085126144)) If you have a single pane, that will be wrapped. If you have 2 or more, only  the pane at index #1 will be wrapped. Sidebars to the left and right are not affected, no matter how many you have. This assumed #1 is not a sidebar, of course.
+
 Here's the list of subviews of the `NSSplitView` when managed by a `NSSplitViewController`:
 
 ```
