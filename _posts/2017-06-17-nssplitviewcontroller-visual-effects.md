@@ -1,10 +1,16 @@
 ---
 title: "Fixing NSTableView Cell Backgrounds by Deactivating NSSplitViewItem's Visual Effects"
 created_at: 2017-06-17 13:23:03 +0200
-tags: [ nstableview ]
+tags: [ nstableview, nssplitview ]
 vgwort: http://vg01.met.vgwort.de/na/e73f21a7acb34205b0ac61afa3b46a01
 comments: on
 ---
+
+[I discovered my own idiocy](/posts/2017/06/18/nssplitviewitem-kinds/) and found that I overlooked which initializer of `NSSplitViewItem` was called. Apparently, the sidebar-related one adds vibrancy by default. Dealing with un-vibrancifying a table view might still be interesting, so I leave this up.
+
+Don't jump to conclusions, folks, and don't copy faulty code over to test projects: if I had typed the `NSSplitViewItem`s setup code instead of pasting it in, I would've caught the initializer's parameter difference.
+
+---------
 
 My table view items looked odd for a while and I couldn't figure out why. Until I disabled "Reduce transparency" in my System Preferences's "Accessiblity" pane. 
 
@@ -14,7 +20,7 @@ This was 0% my own genius and 100% thanks to a beta tester. (Thanks, Michel!)
 
 I couldn't reproduce this in a simple test app, no matter the settings of the views. Until I looked at the implementation of the split view controller. In the real app, I manage the split view with a `NSSplitViewController` subclass. Using this controller class, all of a sudden `NSSplitViewItem`s are being wrapped in `_NSSplitViewItemViewWrapper`, each containing a `NSVisualEffectsView`. The dividers become "vibrant", too.
 
-**`NSSplitViewController` only wraps the main pane in a visual effects view.** ([rdar://4985026085126144](http://openradar.appspot.com/radar?id=4985026085126144)) If you have a single pane, that will be wrapped. If you have 2 or more, only  the pane at index #1 will be wrapped. Sidebars to the left and right are not affected, no matter how many you have. This assumed #1 is not a sidebar, of course.
+`NSSplitViewController` only wraps the main pane in a visual effects view.**  If you have a single pane, that will be wrapped. If you have 2 or more, only  the pane at index #1 will be wrapped. Sidebars to the left and right are not affected, no matter how many you have. This assumed #1 is not a sidebar, of course.
 
 Here's the list of subviews of the `NSSplitView` when managed by a `NSSplitViewController`:
 
