@@ -1,7 +1,7 @@
 ---
 title: Scroll NSScrollView Programmatically Without Showing the Scroller Knobs
 created_at: 2017-07-08 09:47:10 +0200
-tags: [ nsscrollview ]
+tags: [ nsscrollview, typewriter ]
 comments: on
 ---
 
