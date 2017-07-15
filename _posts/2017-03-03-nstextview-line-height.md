@@ -11,7 +11,7 @@ comments: on
 * If the user adds text in the middle of an already laid-out line of text, the paragraph style is retained. 
 * If the user writes at the beginning of the line, the line height info gets lost.
 
-{% include figure.md src="/assets/blog/2017/20170303102946_losing-paragraph-info.gif" alt="GIF of the process" caption="This is what happens when you type at the beginning of a line" %}
+{% include figure.md src="/assets/blog/2017/20170303102946_losing-paragraph-info.gif" alt="GIF of the process" caption="This is what happens when you type at the beginning of a document with static paragraph styles" %}
 
 It's your usual RTF nightmare. I know this behavior from rich text editors; and I developed my own way to make sense of it in the process. It might not be what is really going on, but it's a good heuristic: it's just like the opposite of making a word bold, placing your cursor after that word, type, and get more bold text. There, the "bold text" information is carried on. The cursor inherits this info from the character left to it. But if you start at the beginning of a line, your cursor will not inherit what comes afterward. And since there is nothing before its position, it starts with empty info, and thus empty line height settings. Since the whole paragraph is affected by this, the latest change wins. Beginning to type at the beginning of a paragraph with empty paragraph settings removes them from what comes afterwards.
 
@@ -48,3 +48,5 @@ What I'd expect to create instead:
 I imagine this to be like HTML code/browser rendering, not like <abbr title="What You See Is What You Get">WYSIWYG</abbr>. What you type is not what you see. Just what you'd expect a source code editor to be like.
 
 I'll keep you posed as I dive deeper into TextKit and stuff.
+
+**Update 2017-07-15:** There's a better (?) technique I found but which involves a bit more work. It's centered around the `NSLayoutManager` and produces better-looking results. [Read more!](/posts/2017/07/14/nstextview-proper-line-height/)
