@@ -29,3 +29,6 @@ class MyTextView: NSTextView {
 Adapted to Swift from [a Gist by koenbok](https://gist.github.com/koenbok/a1b8d942977f69ff102b).
 
 That's all it takes. Marvelous!
+
+**Update:** So it turns out that the drawing works just fine in a test project, but I end up with 1px-wide insertion points/carets/I-beams when I click with the mouse or press up/down arrow keys. Left and right work fine. I wonder what's wrong with this. Isn't it supposed to be a rather simple customization?
+
