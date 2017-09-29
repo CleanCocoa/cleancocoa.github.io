@@ -16,88 +16,86 @@ Injecting side-effects through middleware is not easy to do, though, as long as 
 The latter can look like this:
 
 ```swift
-ApplicationMiddlewareRepository.instance
+SideEffectRegistry.instance
     .addBeforeReducers { (bananaAction: BananaAction) in 
         Swift.print("Banana action passing through: \(bananaAction)") }
 ```
 
 As a bonus (and risk!), this approach allows you to change which middleware are active during runtime. Keep in mind that ReSwift is designed not to allow this, so proceed with caution.
 
-The closure is of type `ApplicationMiddleware`. I found it beneficial to not have `ApplicationMiddleware` take any `ReSwift.Action` by default, because I usually conditionally check for one specific type, not multiple. So I lift the action type filtering to a generic constraint:
+The closure is of type `SideEffect`. I found it beneficial to not have `SideEffect` take just any `ReSwift.Action` by default, because I usually conditionally check for one specific type, not multiple. So I lift the action type filtering to a generic constraint:
 
 ```swift
-typealias ApplicationMiddleware<A : Action> = (A) -> Void
+public typealias SideEffect<A : Action> = (_ action: A, _ dispatch: DispatchFunction) -> Void
 ```
 
-Now you cannot create an array from these function bodies anymore; also, though the `Action` subtype is now reified as a generic constraint, the actual cast from `Action` to `A` has to go somewhere. I put it into a `AnyApplicationMiddleware` box:
+Now you cannot create an array from these function bodies anymore; also, though the `Action` subtype is now reified as a generic constraint, the actual cast from `Action` to `A` has to go somewhere. I put it into a `AnySideEffect` box:
 
 ```swift
-struct AnyApplicationMiddleware {
-    let boxedMiddleware: (Action) -> Void
+struct AnySideEffect {
+    let boxedSideEffect: (Action, DispatchFunction) -> Void
 
-    init<A: Action>(_ base: @escaping ApplicationMiddleware<A>) {
-        self.boxedMiddleware = { action in
+    init<A: Action>(_ base: @escaping SideEffect<A>) {
+        self.boxedSideEffect = { action, dispatch in
             guard let castAction = action as? A else { return }
-            base(castAction)
+            base(castAction, dispatch)
         }
     }
 }
 ```
 
-Now you can have an `[AnyApplicationMiddleware]` array and pass any `Action` through. Only matching actions will be passed to interested middleware.
+Now you can have an `[AnySideEffect]` array and pass any `Action` through. Only matching actions will be passed to interested middleware.
 
-Heads up: This closure-based approach can allow removing all registered `ApplicationMiddleware`, but not specific instances. For that, instead of a `typealias`'d closure I'd use a reference type and check for reference equality (`===`) to remove/deactivate them.
+Heads up: This closure-based approach can allow removing all registered `SideEffect`, but not specific instances. For that, instead of a `typealias`'d closure I'd use a reference type and check for reference equality (`===`) to remove/deactivate them.
+
+**Update 2017-09-29**: I renamed the types a bit, from `ApplicationMiddleware` to `SideEffect`, etc.
 
 ## The Full Implementation
 
 ```swift
-public typealias ApplicationMiddleware<A : Action> = (A) -> Void
+/// - parameter action: The expected action to perform a side effect on.
+/// - parameter dispatch: Default dispatch function into the current store.
+public typealias SideEffect<A : Action> = (_ action: A, _ dispatch: DispatchFunction) -> Void
 
-struct AnyApplicationMiddleware {
+struct AnySideEffect {
+    let boxedSideEffect: (Action, DispatchFunction) -> Void
 
-    let boxedMiddleware: (Action) -> Void
-
-    init<A: Action>(_ base: @escaping ApplicationMiddleware<A>) {
-
-        self.boxedMiddleware = { action in
+    init<A: Action>(_ base: @escaping SideEffect<A>) {
+        self.boxedSideEffect = { action, dispatch in
             guard let castAction = action as? A else { return }
-            base(castAction)
+            base(castAction, dispatch)
         }
     }
 
-    func process(action: Action) {
-        boxedMiddleware(action)
+    func process(action: Action, dispatch: DispatchFunction) {
+        boxedSideEffect(action, dispatch)
     }
 }
 
-public class ApplicationMiddlewareRepository {
-
-    public static var instance = ApplicationMiddlewareRepository()
+public class SideEffectRegistry {
+    public static var instance = SideEffectRegistry()
     private init() { }
 
-    internal fileprivate(set) var middlewares: [AnyApplicationMiddleware] = []
+    internal fileprivate(set) var sideEffects: [AnySideEffect] = []
 
-    public func addBeforeReducers<A: Action>(middleware: @escaping ApplicationMiddleware<A>) {
-
-        middlewares.append(AnyApplicationMiddleware(middleware))
+    public func addBeforeReducers<A: Action>(sideEffect: @escaping SideEffect<A>) {
+        sideEffects.append(AnySideEffect(sideEffect))
     }
 
-    internal func process(action: Action) {
-
-        middlewares.forEach { $0.process(action: action) }
+    internal func process(action: Action, dispatch: DispatchFunction) {
+        sideEffects.forEach { $0.process(action: action, dispatch: dispatch) }
     }
 }
 
-let applicationMiddleware: Middleware<AppState> = { dispatch, getState in
-
+let sideEffectsMiddleware: Middleware<AppState> = { dispatch, getState in
     return { next in
         return { action in
-
-            ApplicationMiddlewareRepository.instance
-                .process(action: action)
+            SideEffectRegistry.instance
+                .process(action: action, dispatch: dispatch)
 
             next(action)
         }
     }
 }
 ```
+
